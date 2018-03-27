@@ -1,0 +1,114 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const Address = require("./address.js");
+const bcrypt = require("bcrypt-nodejs");
+mongoose.Promise = global.Promise;
+const Promise = require("bluebird");
+/**
+ * @swagger
+ * definitions:
+ *   User:
+ *     type: object
+ *     required:
+ *       - firstName
+ *       - lastName
+ *     properties:
+ *       id:
+ *         type: string
+ *         readOnly: true
+ *       identification:
+ *         type: string
+ *       firstName:
+ *         type: string
+ *       lastName:
+ *         type: string
+ *       email:
+ *         type: string
+ *         format: email
+ *       password:
+ *         type: string
+ *       cellPhone:
+ *         type: string
+ *       homePhone:
+ *         type: string
+ *       workPhone:
+ *         type: string
+ *       address:
+ *         $ref: '#/definitions/Address'
+ */
+
+function encrypt(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+}
+
+const UserSchema = new Schema(
+  {
+    identification: { type: String, fake: "phone.phoneNumber", unique: true },
+    firstName: {
+      type: String,
+      required: true,
+      validate: [validateNoNumbers, "names cannot have numbers"],
+      maxlength: 100,
+      fake: "name.firstName",
+      es_indexed: true,
+      es_type: "text"
+    },
+    lastName: {
+      type: String,
+      required: true,
+      validate: [validateNoNumbers, "names cannot have numbers"],
+      maxlength: 100,
+      fake: "name.lastName",
+      es_indexed: true,
+      es_type: "text"
+    },
+    email: {
+      type: String,
+      unique: true,
+      fake: "internet.email",
+      validate: [emailValidator, ""]
+    },
+    password: {
+      type: String,
+      set: encrypt,
+      default: "",
+      fake: "internet.password"
+    },
+    address: {
+      type: Address
+    },
+    cellPhone: { type: String, fake: "phone.phoneNumber" },
+    homePhone: { type: String, fake: "phone.phoneNumber" },
+    workPhone: { type: String, fake: "phone.phoneNumber" }
+  },
+  {
+    timestamps: { createdAt: "created_at" },
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
+  }
+);
+
+// ----- Virtuals ---------- //
+
+UserSchema.virtual("fullName").get(function() {
+  return this.firstName + " " + this.lastName;
+});
+
+// ----- Model Mehods ---------- //
+UserSchema.methods.validPassword = function(password) {
+  return bcrypt.compareSync(password, this.password);
+};
+
+// ----- Model Statics ---------- //
+UserSchema.statics.shortSelector = "_id firstName lastName identification";
+
+function emailValidator(email) {
+  var emailRgx = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+  return emailRgx.test(email);
+}
+
+function validateNoNumbers(field) {
+  return !/\d/.test(field);
+}
+
+module.exports = mongoose.model("User", UserSchema);

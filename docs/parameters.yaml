@@ -1,0 +1,12 @@
+
+parameters:
+  skip:
+    name: skip
+    in: query
+    description: number of elements of paginate route to skip
+    type: integer
+  limit:
+    name: limit
+    in: query
+    description: max number of elements that we want to receive in response
+    type: integer

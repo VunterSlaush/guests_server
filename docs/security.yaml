@@ -1,0 +1,8 @@
+securityDefinitions:
+  basicAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: a basic authentication via token received on the /user/auth route and post to /user route, just add 'bearer' + token to this field
+security:
+  basicAuth: []
