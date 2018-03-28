@@ -1,5 +1,6 @@
 const user = require("../controllers/user");
 const post = require("../controllers/post");
+const visit = require("../controllers/visit");
 const express = require("express");
 const router = express.Router();
 const secureRouter = express.Router();
@@ -113,6 +114,33 @@ secureRouter.use(auth.jwt());
 secureRouter.put(
   "/me",
   handler(user.update, (req, res, next) => [req.user.id, req.body, req.files])
+);
+
+/**
+ * @swagger
+ * /user/me/visits:
+ *   get:
+ *     description: Lista de visitas
+ *     tags:
+ *      - User
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - $ref: "#/parameters/skip"
+ *       - $ref: "#/parameters/limit"
+ *     responses:
+ *       200:
+ *         description: user information updated
+ *         schema:
+ *             $ref: '#/definitions/User'
+ */
+secureRouter.put(
+  "/me/visits",
+  handler(visit.findByResident, (req, res, next) => [
+    req.user.id,
+    !req.query.skip ? 0 : Number(req.query.skip),
+    !req.query.limit ? 30 : Number(req.query.limit)
+  ])
 );
 
 /**

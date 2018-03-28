@@ -1,4 +1,5 @@
 const community = require("../controllers/community");
+const communityUser = require("../controllers/communityUser");
 const post = require("../controllers/post");
 const express = require("express");
 const router = express.Router();
@@ -114,6 +115,157 @@ router.delete(
   "/:community",
   handler(community.destroy, (req, res, next) => [
     req.params.community,
+    req.user
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/security:
+ *   post:
+ *     description: A;adir personal de Vigilancia
+ *     tags:
+ *      - Community
+ *      - CommunityUser
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: body
+ *         description: Comunidad
+ *         in:  body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             user:
+ *               description: user id del usuario vigilante
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Comunidad Creada
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+router.post(
+  "/:comunity/security",
+  handler(communityUser.create, (req, res, next) => [
+    req.params.comunity,
+    req.body.user,
+    "SECURITY",
+    req.user
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/resident:
+ *   post:
+ *     description: A;adir residente o residentes
+ *     tags:
+ *      - Community
+ *      - CommunityUser
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: body
+ *         description: Comunidad
+ *         in:  body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             user:
+ *               description: user id del usuario residente
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Comunidad Creada
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+router.post(
+  "/:comunity/resident",
+  handler(communityUser.create, (req, res, next) => [
+    req.params.comunity,
+    req.body.user,
+    "RESIDENT",
+    req.user
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/administrator:
+ *   post:
+ *     description: A;adir personal de administracion
+ *     tags:
+ *      - Community
+ *      - CommunityUser
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: body
+ *         description: Comunidad
+ *         in:  body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             user:
+ *               description: user id del usuario vigilante
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Comunidad Creada
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+router.post(
+  "/:comunity/administrator",
+  handler(communityUser.create, (req, res, next) => [
+    req.params.comunity,
+    req.body.user,
+    "ADMINISTRATOR",
+    req.user
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{comunityUser}:
+ *   delete:
+ *     description: remover administrador, residente, o personal de seguridad
+ *     tags:
+ *      - Community
+ *      - CommunityUser
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: communityUser
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Registro Eliminado
+ */
+router.post(
+  "/:comunityUser",
+  handler(communityUser.destroy, (req, res, next) => [
+    req.params.comunityUser,
     req.user
   ])
 );

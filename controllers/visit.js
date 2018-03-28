@@ -1,10 +1,11 @@
-const { Visit } = require("../models");
+const { Visit, Check } = require("../models");
 const ApiError = require("../utils/ApiError");
 const moment = require("moment");
-
-async function create({ resident, guest, community, kind }) {
+const { findIfUserIsOnCommunity } = require("./utils");
+async function create(resident, guest, community, kind, intervals) {
   try {
-    let visit = new Visit({ resident, guest, community, kind });
+    findIfUserIsOnCommunity(community, resident);
+    let visit = new Visit({ resident, guest, community, kind, intervals });
     await visit.save();
     return visit;
   } catch (e) {
@@ -12,18 +13,12 @@ async function create({ resident, guest, community, kind }) {
   }
 }
 
-async function checkIn(visitId) {
-  const visit = await Visit.findOne({ _id: visitId });
-  visit.set({ in: Date.now });
-  await visit.save();
-  return visit;
-}
+async function update() {}
 
-async function checkOut(visitId) {
-  const visit = await Visit.findOne({ _id: visitId });
-  visit.set({ out: Date.now });
-  await visit.save();
-  return visit;
+async function check(visit, type) {
+  const check = new Check({ visit, type });
+  await check.save();
+  return check;
 }
 
 async function guestIsScheduled(guest) {
@@ -32,8 +27,17 @@ async function guestIsScheduled(guest) {
   return visit;
 }
 
+async function findByResident(resident, skip, limit) {
+  return await Visit.find({ resident })
+    .sort({ created_at: -1 })
+    .limit(limit)
+    .skip(skip);
+}
+
 module.exports = {
   create,
   update,
-  find
+  checkIn,
+  checkOut,
+  findByResident
 };

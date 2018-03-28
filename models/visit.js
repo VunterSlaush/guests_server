@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
-
+const Interval = require("./interval.js");
 /**
  * @swagger
  * definitions:
@@ -47,9 +47,8 @@ const VisitSchema = new Schema(
       ref: "Community",
       required: true
     },
-    in: { type: Date },
-    out: { type: Date },
     day: { type: Date },
+    intervals: [Interval],
     kind: {
       type: String,
       default: "SCHEDULED",
