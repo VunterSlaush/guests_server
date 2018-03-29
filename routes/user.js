@@ -25,8 +25,8 @@ const auth = require("../auth");
  *         schema:
  *           type: object
  *           properties:
- *             email:
- *               description: user email, used to authenticate via local authentication, require password
+ *             identification:
+ *               description: CEDULA
  *               type: string
  *             password:
  *               description: user password, used to authenticate via local authentication, only require when authenticate via local

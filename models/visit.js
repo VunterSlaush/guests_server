@@ -9,23 +9,34 @@ const Interval = require("./interval.js");
  *     type: object
  *     description: this model represents the Visits between users
  *     required:
- *       - sender
- *       - receiver
+ *       - guest
  *     properties:
  *       id:
  *         type: string
  *         readOnly: true
- *       sender:
+ *       resident:
  *         type: string
  *         readOnly: true
  *         description: who send the Visit request
- *       receiver:
+ *       guest:
  *         type: string
- *         readOnly: true
- *         description: who receive the Visit request
- *       approved:
- *         type: boolean
- *         description: the status of the Visit request
+ *         description: who is Guest
+ *       community:
+ *         type: string
+ *         description: the Id Of the comunity
+ *       dayOfVisit:
+ *         type: string
+ *         format: date
+ *         description: Day of Visit!
+ *       kind:
+ *         type: string
+ *         description: the type of visit
+ *         enum: [SCHEDULED, FREQUENT, NOT EXPECTED, SPORADIC]
+ *       intervals:
+ *         type: array
+ *         items:
+ *           schema:
+ *              $ref: '#/definitions/Interval'
  */
 
 const VISIT_KIND = ["SCHEDULED", "FREQUENT", "NOT EXPECTED", "SPORADIC"];
@@ -47,7 +58,7 @@ const VisitSchema = new Schema(
       ref: "Community",
       required: true
     },
-    day: { type: Date },
+    dayOfVisit: { type: Date },
     intervals: [Interval],
     kind: {
       type: String,

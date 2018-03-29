@@ -27,7 +27,7 @@ const CommunitySchema = new Schema(
       type: String,
       required: true,
       maxlength: 100,
-      fake: "Community.CommunityName",
+      fake: "address.streetName",
       es_indexed: true,
       es_type: "text"
     },

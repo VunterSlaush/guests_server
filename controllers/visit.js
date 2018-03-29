@@ -1,11 +1,22 @@
 const { Visit, Check } = require("../models");
 const ApiError = require("../utils/ApiError");
 const moment = require("moment");
-const { findIfUserIsOnCommunity } = require("./utils");
-async function create(resident, guest, community, kind, intervals) {
+const {
+  findIfUserIsOnCommunity,
+  findIfUserIsCommunitySecure
+} = require("./utils");
+
+async function create(resident, guest, community, kind, intervals, dayOfVisit) {
   try {
-    findIfUserIsOnCommunity(community, resident);
-    let visit = new Visit({ resident, guest, community, kind, intervals });
+    await findIfUserIsOnCommunity(community, resident);
+    let visit = new Visit({
+      resident,
+      guest,
+      community,
+      kind,
+      intervals,
+      dayOfVisit: new Date(dayOfVisit)
+    });
     await visit.save();
     return visit;
   } catch (e) {
@@ -13,7 +24,9 @@ async function create(resident, guest, community, kind, intervals) {
   }
 }
 
-async function update() {}
+async function update() {
+  /* TODO*/
+}
 
 async function check(visit, type) {
   const check = new Check({ visit, type });
@@ -21,10 +34,50 @@ async function check(visit, type) {
   return check;
 }
 
-async function guestIsScheduled(guest) {
-  // TODO Evaluate if can access or not ..
-  const visit = Visit.findOne({ guest }).sort({ created_at: -1 });
-  return visit;
+async function guestIsScheduled(community, guest, userWhoAsk) {
+  await findIfUserIsCommunitySecure(community, userWhoAsk);
+  const visit = await Visit.find({
+    guest: guest,
+    community: community
+  }).sort({
+    created_at: -1
+  });
+  const visitsFiltered = visit.filter(item => evaluateVisit(item));
+  return visitsFiltered;
+}
+
+function evaluateVisit(visit) {
+  switch (visit.kind) {
+    case "SCHEDULED":
+      return evaluateScheduled(visit);
+      break;
+    case "FREQUENT":
+      return evaluateFrequent(visit);
+      break;
+    case "SPORADIC":
+      return true;
+      break;
+    default:
+  }
+}
+
+function evaluateScheduled(visit) {
+  const now = moment();
+  const visitDay = moment(visit.dayOfVisit);
+  const diff = now.diff(visitDay, "days");
+  return diff <= 0;
+}
+
+function evaluateFrequent(visit) {
+  const { intervals } = visit;
+  const now = moment();
+  const day = now.day();
+  const hour = now.hour() * 100 + now.minutes();
+  return (
+    intervals.filter(
+      item => item.day == day && item.from <= hour && item.to >= hour
+    ).length > 0
+  );
 }
 
 async function findByResident(resident, skip, limit) {
@@ -37,7 +90,7 @@ async function findByResident(resident, skip, limit) {
 module.exports = {
   create,
   update,
-  checkIn,
-  checkOut,
+  check,
+  guestIsScheduled,
   findByResident
 };

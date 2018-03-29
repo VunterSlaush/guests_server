@@ -11,7 +11,7 @@ module.exports = new LocalStrategy(
 );
 
 async function authenticate(identification, password, done) {
-  let user = await User.findOne({ identification });
+  let user = await User.findOne({ identification: identification });
   if (!user.password) return done(null, false);
   if (!user || !user.validPassword(password)) return done(null, false);
   return done(null, user);

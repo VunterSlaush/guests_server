@@ -33,7 +33,8 @@ router.post(
     req.body.guest,
     req.body.community,
     req.body.kind,
-    req.body.intervals
+    req.body.intervals,
+    req.body.dayOfVisit
   ])
 );
 
@@ -41,7 +42,7 @@ router.post(
  * @swagger
  * /visits/{visit}:
  *   put:
- *     description: Crear una Visita
+ *     description: Modificar una Visita
  *     tags:
  *      - Visit
  *     produces:

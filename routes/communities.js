@@ -1,4 +1,5 @@
 const community = require("../controllers/community");
+const visit = require("../controllers/visit");
 const communityUser = require("../controllers/communityUser");
 const post = require("../controllers/post");
 const express = require("express");
@@ -266,6 +267,41 @@ router.post(
   "/:comunityUser",
   handler(communityUser.destroy, (req, res, next) => [
     req.params.comunityUser,
+    req.user
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/shouldEnter:
+ *   post:
+ *     description: El usuario tiene permiso para entrar?
+ *     tags:
+ *      - Visit
+ *      - Community
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: body
+ *         in:  body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             guest:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Visita Eliminada
+ */
+router.post(
+  "/:community/shouldEnter",
+  handler(visit.guestIsScheduled, (req, res, next) => [
+    req.params.community,
+    req.body.guest,
     req.user
   ])
 );

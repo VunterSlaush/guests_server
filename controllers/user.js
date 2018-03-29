@@ -17,7 +17,7 @@ async function create(info) {
     return auth(user);
   } catch (e) {
     if (e.code && e.code == 11000)
-      throw new ApiError("the Identification is repeated", 409);
+      throw new ApiError("the Identification or email is repeated", 409);
     throw new ApiError("invalid parameters", 400);
   }
 }

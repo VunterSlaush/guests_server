@@ -8,34 +8,26 @@ const Schema = mongoose.Schema;
  *   Interval:
  *     type: object
  *     required:
- *       - country
- *       - state
- *       - zip
+ *       - day
+ *       - from
+ *       - to
  *     properties:
  *       id:
  *         type: string
  *         readOnly: true
  *       day:
- *         type: string
+ *         type: number
  *         description: dia de la semana!
  *       from:
  *         type: number
  *       to:
  *         type: number
  */
-const DAYS_OF_WEEK = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday"
-];
+const DAYS_OF_WEEK = [1, 2, 3, 4, 5, 6, 7];
 const IntervalSchema = new Schema(
   {
     day: {
-      type: String,
+      type: Number,
       required: true,
       maxlength: 100,
       enum: DAYS_OF_WEEK
