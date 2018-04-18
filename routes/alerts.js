@@ -1,4 +1,4 @@
-const post = require("../controllers/post");
+const alert = require("../controllers/alert");
 const express = require("express");
 const handler = require("../utils/ControllerHandler");
 const router = express.Router();
@@ -7,43 +7,36 @@ router.use(auth.jwt());
 
 /**
  * @swagger
- * /posts:
+ * /alerts:
  *   post:
- *     description: create one new Post
+ *     description: create one new alert
  *     tags:
- *      - Post
+ *      - Alert
  *     produces:
  *      - application/json
  *     parameters:
  *       - name: body
  *         in:  body
  *         schema:
- *           type: object
- *           properties:
- *            content:
- *              description: the text write by the user for the post
- *              type: string
- *            images:
- *              description: a list of files
- *              type: array
- *              items:
- *                type: string
- *                format: binary
+ *           $ref: '#/definitions/Alert'
  *     responses:
  *       200:
- *         description: Post Created info
+ *         description: alert Created info
  *         schema:
- *             $ref: '#/definitions/Post'
+ *             $ref: '#/definitions/Alert'
  */
-router.post("/", handler(post.create, (req, res, next) => [req.body]));
+router.post(
+  "/",
+  handler(alert.create, (req, res, next) => [req.body, req.user._id])
+);
 
 /**
  * @swagger
- * /posts/{post}:
+ * /alerts/{alert}:
  *   put:
- *     description: Update the description for a post
+ *     description: Update the description for a alert
  *     tags:
- *      - Post
+ *      - Alert
  *     produces:
  *      - application/json
  *     parameters:
@@ -59,27 +52,27 @@ router.post("/", handler(post.create, (req, res, next) => [req.body]));
  *       200:
  *         description: Post Updated
  *         schema:
- *             $ref: '#/definitions/Post'
+ *             $ref: '#/definitions/Alert'
  */
 router.put(
-  "/:post",
-  handler(post.update, (req, res, next) => [
-    req.params.post,
-    req.body.content,
+  "/:alert",
+  handler(alert.update, (req, res, next) => [
+    req.params.alert,
+    req.body,
     req.user
   ])
 );
 
 /**
  * @swagger
- * /posts/{post}:
+ * /alerts/{alert}:
  *   delete:
  *     description: remove a selected Post, Only the User Owner can Delete it
  *     tags:
- *      - Post
+ *      - Alert
  *     parameters:
  *       - name: id
- *         description: id of post to delete
+ *         description: id of alert to delete
  *         in:  path
  *         schema:
  *           		type: string
@@ -94,8 +87,8 @@ router.put(
  *         description: Post not found
  */
 router.delete(
-  "/:post",
-  handler(post.destroy, (req, res, next) => [req.params.post, req.user])
+  "/:alert",
+  handler(alert.destroy, (req, res, next) => [req.params.alert, req.user])
 );
 
 module.exports = router;

@@ -10,17 +10,15 @@ const Promise = require("bluebird");
  *   User:
  *     type: object
  *     required:
- *       - firstName
- *       - lastName
+ *       - identification
+ *       - name
  *     properties:
  *       id:
  *         type: string
  *         readOnly: true
  *       identification:
  *         type: string
- *       firstName:
- *         type: string
- *       lastName:
+ *       name:
  *         type: string
  *       email:
  *         type: string
@@ -44,21 +42,12 @@ function encrypt(password) {
 const UserSchema = new Schema(
   {
     identification: { type: String, fake: "phone.phoneNumber", unique: true },
-    firstName: {
+    name: {
       type: String,
       required: true,
       validate: [validateNoNumbers, "names cannot have numbers"],
       maxlength: 100,
-      fake: "name.firstName",
-      es_indexed: true,
-      es_type: "text"
-    },
-    lastName: {
-      type: String,
-      required: true,
-      validate: [validateNoNumbers, "names cannot have numbers"],
-      maxlength: 100,
-      fake: "name.lastName",
+      fake: "name.findName",
       es_indexed: true,
       es_type: "text"
     },
@@ -77,6 +66,7 @@ const UserSchema = new Schema(
     address: {
       type: Address
     },
+    image: { type: String, fake: "internet.avatar" },
     cellPhone: { type: String, fake: "phone.phoneNumber" },
     homePhone: { type: String, fake: "phone.phoneNumber" },
     workPhone: { type: String, fake: "phone.phoneNumber" }
@@ -87,12 +77,6 @@ const UserSchema = new Schema(
     toJSON: { virtuals: true }
   }
 );
-
-// ----- Virtuals ---------- //
-
-UserSchema.virtual("fullName").get(function() {
-  return this.firstName + " " + this.lastName;
-});
 
 // ----- Model Mehods ---------- //
 UserSchema.methods.validPassword = function(password) {

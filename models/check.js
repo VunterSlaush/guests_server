@@ -29,12 +29,11 @@ const CheckSchema = new Schema(
     type: {
       type: String,
       required: true,
-      maxlength: 100,
       enum: CHECK_TYPES
     },
     visit: {
       type: Schema.Types.ObjectId,
-      ref: "VISIT",
+      ref: "Visit",
       required: true
     }
   },
@@ -45,4 +44,4 @@ const CheckSchema = new Schema(
   }
 );
 
-module.exports = CheckSchema;
+module.exports = mongoose.model("Check", CheckSchema);

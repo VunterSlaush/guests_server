@@ -1,5 +1,6 @@
 const { Community, CommunityUser } = require("../models");
 const ApiError = require("../utils/ApiError");
+const mongoose = require("mongoose");
 const { findIfUserIsGranted } = require("./utils");
 
 // TODO SECURE THIS ROUTE!
@@ -44,7 +45,32 @@ async function details(id, user) {
 }
 
 async function userCommunities(user) {
-  return await CommunityUser.find({ user: user });
+  const communitiesRaw = await Community.aggregate([
+    {
+      $lookup: {
+        from: "communityusers",
+        localField: "_id",
+        foreignField: "community",
+        as: "community_users"
+      }
+    },
+    {
+      $unwind: "$community_users"
+    },
+    {
+      $match: {
+        "community_users.user": mongoose.Types.ObjectId(user)
+      }
+    }
+  ]);
+  const communities = communitiesRaw.map(item => {
+    return {
+      name: item.name,
+      _id: item._id,
+      kind: item.community_users.kind
+    };
+  });
+  return { communities };
 }
 
 async function people(communityId, skip, limit) {

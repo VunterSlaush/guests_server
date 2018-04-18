@@ -1,6 +1,7 @@
 const user = require("../controllers/user");
-const post = require("../controllers/post");
 const visit = require("../controllers/visit");
+const alert = require("../controllers/alert");
+const community = require("../controllers/community");
 const express = require("express");
 const router = express.Router();
 const secureRouter = express.Router();
@@ -74,7 +75,13 @@ router.all(
  *       400:
  *         description: invalid parameters are passed
  */
-router.post("/", handler(user.create, (req, res, next) => [req.body]));
+router.post(
+  "/",
+  handler(user.create, (req, res, next) => [
+    req.body,
+    !req.files ? null : req.files.image
+  ])
+);
 
 secureRouter.use(auth.jwt());
 
@@ -118,7 +125,7 @@ secureRouter.put(
 
 /**
  * @swagger
- * /user/me/visits:
+ * /user/me/visits/{type}:
  *   get:
  *     description: Lista de visitas
  *     tags:
@@ -126,18 +133,25 @@ secureRouter.put(
  *     produces:
  *      - application/json
  *     parameters:
+ *       - name: type
+ *         description: the type of visit!
+ *         in:  path
+ *         schema:
+ *           type: string
+ *           enum: [SCHEDULED, FREQUENT, SPORADIC]
  *       - $ref: "#/parameters/skip"
  *       - $ref: "#/parameters/limit"
  *     responses:
  *       200:
- *         description: user information updated
+ *         description: Array of Visits!
  *         schema:
- *             $ref: '#/definitions/User'
+ *             $ref: '#/definitions/Visit'
  */
-secureRouter.put(
-  "/me/visits",
+secureRouter.get(
+  "/me/visits/:type",
   handler(visit.findByResident, (req, res, next) => [
     req.user.id,
+    req.params.type,
     !req.query.skip ? 0 : Number(req.query.skip),
     !req.query.limit ? 30 : Number(req.query.limit)
   ])
@@ -163,6 +177,47 @@ secureRouter.get(
   handler(user.profile, (req, res, next) => [req.user.id])
 );
 
+/**
+ * @swagger
+ * /user/me/communities:
+ *   get:
+ *     description: get the User Communities!
+ *     tags:
+ *      - User
+ *      - Community
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: user information updated
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+secureRouter.get(
+  "/me/communities",
+  handler(community.userCommunities, (req, res, next) => [req.user.id])
+);
+
+/**
+ * @swagger
+ * /user/me/alerts:
+ *   get:
+ *     description: get the User Communities!
+ *     tags:
+ *      - User
+ *      - Alert
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: user information updated
+ *         schema:
+ *             $ref: '#/definitions/Alert'
+ */
+secureRouter.get(
+  "/me/alerts",
+  handler(alert.userAlerts, (req, res, next) => [req.user.id])
+);
 /**
  * @swagger
  * /user/{user}:

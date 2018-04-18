@@ -34,11 +34,13 @@ const IntervalSchema = new Schema(
     },
     from: {
       type: Number,
-      required: true
+      required: true,
+      fake: "random.number"
     },
     to: {
       type: Number,
-      required: true
+      required: true,
+      fake: "random.number"
     }
   },
   {

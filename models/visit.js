@@ -58,7 +58,7 @@ const VisitSchema = new Schema(
       ref: "Community",
       required: true
     },
-    dayOfVisit: { type: Date },
+    dayOfVisit: { type: Date, fake: "date.future" },
     intervals: [Interval],
     kind: {
       type: String,
@@ -69,6 +69,7 @@ const VisitSchema = new Schema(
   },
   {
     timestamps: { createdAt: "created_at" },
+    fakeCreatedAt: { from: "01-01-2018", to: "12-31-2018" },
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
   }

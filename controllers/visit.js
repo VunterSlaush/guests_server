@@ -1,5 +1,6 @@
 const { Visit, Check } = require("../models");
 const ApiError = require("../utils/ApiError");
+const mongoose = require("mongoose");
 const moment = require("moment");
 const {
   findIfUserIsOnCommunity,
@@ -80,11 +81,62 @@ function evaluateFrequent(visit) {
   );
 }
 
-async function findByResident(resident, skip, limit) {
-  return await Visit.find({ resident })
-    .sort({ created_at: -1 })
-    .limit(limit)
-    .skip(skip);
+async function findByResident(resident, kind, skip, limit) {
+  let visits;
+  if (kind != "SCHEDULED") {
+    visits = await Visit.find({ resident, kind })
+      .populate("guest")
+      .populate("community")
+      .sort({ created_at: -1 })
+      .limit(limit)
+      .skip(skip);
+  } else {
+    visits = await Visit.aggregate([
+      {
+        $match: {
+          resident: mongoose.Types.ObjectId(resident),
+          kind,
+          dayOfVisit: { $gte: new Date() }
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "guest",
+          foreignField: "_id",
+          as: "guest"
+        }
+      },
+      {
+        $lookup: {
+          from: "communities",
+          localField: "community",
+          foreignField: "_id",
+          as: "community"
+        }
+      },
+      {
+        $lookup: {
+          from: "checks",
+          localField: "_id",
+          foreignField: "visit",
+          as: "checks"
+        }
+      },
+      {
+        $match: {
+          checks: { $size: 0 }
+        }
+      },
+      {
+        $unwind: "$community"
+      },
+      {
+        $unwind: "$guest"
+      }
+    ]);
+  }
+  return { visits };
 }
 
 module.exports = {
