@@ -179,6 +179,61 @@ secureRouter.get(
 
 /**
  * @swagger
+ * /user/me/devices:
+ *   post:
+ *     description: add new device to user!
+ *     tags:
+ *      - User
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: body
+ *         in:  body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             device:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: user information updated
+ */
+secureRouter.post(
+  "/me/devices",
+  handler(user.addDevice, (req, res, next) => [req.body.device, req.user.id])
+);
+
+/**
+ * @swagger
+ * /user/me/devices/{device}:
+ *   delete:
+ *     description: remove a device from user
+ *     tags:
+ *      - User
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: device
+ *         description: the device to delete!
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: user information updated
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+secureRouter.delete(
+  "/me/devices/:device",
+  handler(user.removeDevice, (req, res, next) => [
+    req.params.device,
+    req.user.id
+  ])
+);
+
+/**
+ * @swagger
  * /user/me/communities:
  *   get:
  *     description: get the User Communities!

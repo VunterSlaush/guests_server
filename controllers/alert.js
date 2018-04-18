@@ -1,16 +1,18 @@
-const { Alert, CommunityUser } = require("../models");
+const { Alert, CommunityUser, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
 const { findIfUserIsGranted } = require("./utils");
-
+const OneSignal = require("../oneSignal");
 // TODO SECURE THIS ROUTE!
 async function create(info, author) {
   try {
     info.author = author;
     let alert = new Alert(info);
     await alert.save();
+    await sendAlert(alert);
     return alert;
   } catch (e) {
+    console.log("E", e);
     throw new ApiError("malformed request", 400);
   }
 }
@@ -37,6 +39,19 @@ async function userAlerts(user) {
     .populate("community")
     .populate("author");
   return { alerts };
+}
+
+async function sendAlert(alert) {
+  User.populate(alert, { path: "author" });
+  const communityUsers = await CommunityUser.find({
+    community: alert.community
+  }).populate("user");
+  const receivers = communityUsers
+    .filter(item => item.user._id.toString() != alert.author._id.toString())
+    .reduce((prev, act) => {
+      return prev.concat(act.user.devices ? act.user.devices : []);
+    }, []);
+  await OneSignal.send(receivers, "alert", alert);
 }
 
 module.exports = {

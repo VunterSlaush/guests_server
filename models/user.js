@@ -57,6 +57,7 @@ const UserSchema = new Schema(
       fake: "internet.email",
       validate: [emailValidator, ""]
     },
+    devices: [String],
     password: {
       type: String,
       set: encrypt,

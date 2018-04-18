@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
-
 /**
  * @swagger
  * definitions:
@@ -63,9 +62,5 @@ const AlertSchema = new Schema(
     fakeCreatedAt: { from: "01-01-2018", to: "12-31-2018" }
   }
 );
-
-AlertSchema.post("save", function(next) {
-  console.log("Call Notifier With", this.receiver);
-});
 
 module.exports = mongoose.model("Alert", AlertSchema);

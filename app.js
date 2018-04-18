@@ -12,7 +12,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const mongoDB = process.env.MONGODB_URI || "mongodb://127.0.0.1/guests";
 const fileUpload = require("express-fileupload");
-const sockets = require("./sockets");
 const auth = require("./auth");
 const fs = require("fs");
 const https = require("https");
@@ -56,7 +55,6 @@ app.use(function(err, req, res, next) {
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port);
-const socketServer = sockets.init(server);
 
 console.info(`App is running on  http://localhost:${port}`);
 

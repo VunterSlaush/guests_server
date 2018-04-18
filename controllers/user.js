@@ -27,6 +27,14 @@ async function create(info, image) {
   }
 }
 
+async function addDevice(device, user) {
+  return User.findOneAndUpdate({ _id: user }, { $push: { devices: device } });
+}
+
+async function removeDevice(device, user) {
+  return User.findOneAndUpdate({ _id: user }, { $pull: { devices: device } });
+}
+
 async function uploadImage(user, image) {
   return new Promise((resolve, reject) => {
     mkdirp(`storage/users/${user._id}`, err => {
@@ -56,4 +64,4 @@ async function update(id, user, files) {
   return { user: userUpdated };
 }
 
-module.exports = { auth, create, update, profile };
+module.exports = { auth, create, update, profile, addDevice, removeDevice };
