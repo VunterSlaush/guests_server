@@ -255,7 +255,7 @@ secureRouter.get(
 
 /**
  * @swagger
- * /user/me/alerts:
+ * /user/me/alerts/{type}:
  *   get:
  *     description: get the User Communities!
  *     tags:
@@ -263,6 +263,15 @@ secureRouter.get(
  *      - Alert
  *     produces:
  *      - application/json
+ *     parameters:
+ *       - name: type
+ *         description: the type of alerts!
+ *         in:  path
+ *         schema:
+ *           type: string
+ *           enum: [INCIDENT, INFORMATION, OTHER]
+ *       - $ref: "#/parameters/skip"
+ *       - $ref: "#/parameters/limit"
  *     responses:
  *       200:
  *         description: user information updated
@@ -270,8 +279,13 @@ secureRouter.get(
  *             $ref: '#/definitions/Alert'
  */
 secureRouter.get(
-  "/me/alerts",
-  handler(alert.userAlerts, (req, res, next) => [req.user.id])
+  "/me/alerts/:type",
+  handler(alert.userAlerts, (req, res, next) => [
+    req.user.id,
+    req.params.type.toUpperCase(),
+    !req.query.skip ? 0 : Number(req.query.skip),
+    !req.query.limit ? 30 : Number(req.query.limit)
+  ])
 );
 /**
  * @swagger

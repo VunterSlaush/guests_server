@@ -85,7 +85,7 @@ UserSchema.methods.validPassword = function(password) {
 };
 
 // ----- Model Statics ---------- //
-UserSchema.statics.shortSelector = "_id firstName lastName identification";
+UserSchema.statics.Selector = "_id name identification image";
 
 function emailValidator(email) {
   var emailRgx = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;

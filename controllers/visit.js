@@ -1,4 +1,4 @@
-const { Visit, Check } = require("../models");
+const { Visit, Check, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
 const moment = require("moment");
@@ -85,7 +85,8 @@ async function findByResident(resident, kind, skip, limit) {
   let visits;
   if (kind != "SCHEDULED") {
     visits = await Visit.find({ resident, kind })
-      .populate("guest")
+      .select(Visit.residentSelector)
+      .populate("guest", User.Selector)
       .populate("community")
       .sort({ created_at: -1 })
       .limit(limit)
@@ -133,7 +134,15 @@ async function findByResident(resident, kind, skip, limit) {
       },
       {
         $unwind: "$guest"
-      }
+      },
+      {
+        $project: {
+          resident: 0
+        }
+      },
+      { $sort: { created_at: -1 } },
+      { $skip: skip },
+      { $limit: limit }
     ]);
   }
   return { visits };

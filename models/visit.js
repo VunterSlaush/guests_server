@@ -75,4 +75,7 @@ const VisitSchema = new Schema(
   }
 );
 
+VisitSchema.statics.residentSelector =
+  "guest community dayOfVisit intervals kind";
+
 module.exports = mongoose.model("Visit", VisitSchema);

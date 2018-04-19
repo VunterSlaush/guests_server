@@ -32,12 +32,15 @@ async function destroy(id, user) {
   return true;
 }
 
-async function userAlerts(user) {
-  const communityUsers = await CommunityUser.find({ user });
+async function userAlerts(user, kind, skip, limit) {
+  const communityUsers = await CommunityUser.find({ user, kind });
   const communities = communityUsers.map(item => item.community);
   const alerts = await Alert.find({ community: { $in: communities } })
     .populate("community")
-    .populate("author");
+    .populate("author", User.Selector)
+    .sort({ created_at: -1 })
+    .skip(skip)
+    .limit(limit);
   return { alerts };
 }
 
