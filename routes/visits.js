@@ -30,7 +30,8 @@ router.post(
   "/",
   handler(visit.create, (req, res, next) => [
     req.user._id,
-    req.body.guest,
+    req.body.identification,
+    req.body.name,
     req.body.community,
     req.body.kind,
     req.body.intervals,

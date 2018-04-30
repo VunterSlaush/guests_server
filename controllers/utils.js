@@ -21,7 +21,7 @@ async function findIfUserIsOnCommunity(communityId, user) {
   try {
     community = await CommunityUser.findOne({
       user,
-      communityId
+      community: communityId
     });
   } catch (e) {
     throw new ApiError("CommunityUser Not Found", 404);

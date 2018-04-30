@@ -33,9 +33,9 @@ async function destroy(id, user) {
 }
 
 async function userAlerts(user, kind, skip, limit) {
-  const communityUsers = await CommunityUser.find({ user, kind });
+  const communityUsers = await CommunityUser.find({ user });
   const communities = communityUsers.map(item => item.community);
-  const alerts = await Alert.find({ community: { $in: communities } })
+  const alerts = await Alert.find({ community: { $in: communities }, kind })
     .populate("community")
     .populate("author", User.Selector)
     .sort({ created_at: -1 })

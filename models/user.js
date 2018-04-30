@@ -54,6 +54,7 @@ const UserSchema = new Schema(
     email: {
       type: String,
       unique: true,
+      sparse: true,
       fake: "internet.email",
       validate: [emailValidator, ""]
     },
@@ -86,6 +87,17 @@ UserSchema.methods.validPassword = function(password) {
 
 // ----- Model Statics ---------- //
 UserSchema.statics.Selector = "_id name identification image";
+
+UserSchema.statics.findOneOrCreate = async function findOneOrCreate(
+  condition,
+  params
+) {
+  const self = this;
+  let u = await self.findOne(condition);
+  if (!u) u = await self.create(params);
+  await u.save();
+  return u;
+};
 
 function emailValidator(email) {
   var emailRgx = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;

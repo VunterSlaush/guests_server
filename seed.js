@@ -19,7 +19,5 @@ if (SELECTED_MODEL) {
 }
 
 function generateModelName(modelName) {
-  return (
-    modelName.charAt(0).toUpperCase() + modelName.substring(1).toLowerCase()
-  );
+  return modelName.charAt(0).toUpperCase() + modelName.substring(1);
 }

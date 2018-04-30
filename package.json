@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "node backup.js && yarn unseed && mocha --recursive && node restore.js",
+    "test":
+      "node backup.js && yarn unseed && mocha --recursive && node restore.js",
     "seed": "node seed.js",
     "backup": "node backup.js",
     "restore": "node restore.js",
@@ -16,8 +17,6 @@
     "node": "8.9.1"
   },
   "dependencies": {
-    "@google/maps": "^0.4.5",
-    "aws-sdk": "^2.171.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.1",
     "body-parser": "~1.18.2",
@@ -27,7 +26,6 @@
     "countryjs": "^1.8.0",
     "debug": "~2.6.9",
     "dotenv": "^5.0.0",
-    "elasticsearch": "^14.0.0",
     "express": "~4.15.5",
     "express-fileupload": "^0.3.0",
     "faker": "^4.1.0",

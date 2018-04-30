@@ -7,20 +7,34 @@ const {
   findIfUserIsCommunitySecure
 } = require("./utils");
 
-async function create(resident, guest, community, kind, intervals, dayOfVisit) {
+async function create(
+  resident,
+  identification,
+  name,
+  community,
+  kind,
+  intervals,
+  dayOfVisit
+) {
   try {
     await findIfUserIsOnCommunity(community, resident);
+    const guest = await User.findOneOrCreate(
+      { identification },
+      { identification, name }
+    );
     let visit = new Visit({
       resident,
-      guest,
+      guest: guest._id,
       community,
       kind,
       intervals,
       dayOfVisit: new Date(dayOfVisit)
     });
+
     await visit.save();
     return visit;
   } catch (e) {
+    console.log("E", e);
     throw new ApiError("malformed request", 400);
   }
 }
