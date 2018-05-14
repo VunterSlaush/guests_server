@@ -3,15 +3,15 @@ const { User } = require("../models");
 
 module.exports = new LocalStrategy(
   {
-    usernameField: "identification",
+    usernameField: "email",
     passwordField: "password",
     session: false
   },
   authenticate
 );
 
-async function authenticate(identification, password, done) {
-  let user = await User.findOne({ identification: identification });
+async function authenticate(email, password, done) {
+  let user = await User.findOne({ email: email });
   if (!user.password) return done(null, false);
   if (!user || !user.validPassword(password)) return done(null, false);
   return done(null, user);

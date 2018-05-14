@@ -7,15 +7,17 @@ const {
   findIfUserIsCommunitySecure
 } = require("./utils");
 
-async function create(
+async function create({
   resident,
   identification,
   name,
   community,
   kind,
   intervals,
+  companions,
+  partOfDay,
   dayOfVisit
-) {
+}) {
   try {
     await findIfUserIsOnCommunity(community, resident);
     const guest = await User.findOneOrCreate(
@@ -28,6 +30,8 @@ async function create(
       community,
       kind,
       intervals,
+      companions,
+      partOfDay,
       dayOfVisit: new Date(dayOfVisit)
     });
 

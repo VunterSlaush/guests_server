@@ -29,13 +29,7 @@ router.use(auth.jwt());
 router.post(
   "/",
   handler(visit.create, (req, res, next) => [
-    req.user._id,
-    req.body.identification,
-    req.body.name,
-    req.body.community,
-    req.body.kind,
-    req.body.intervals,
-    req.body.dayOfVisit
+    { resident: req.user.id, ...req.body }
   ])
 );
 

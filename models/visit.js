@@ -32,6 +32,12 @@ const Interval = require("./interval.js");
  *         type: string
  *         description: the type of visit
  *         enum: [SCHEDULED, FREQUENT, NOT EXPECTED, SPORADIC]
+ *       companions:
+ *         type: integer
+ *         description: how many people came with the guest.
+ *       partOfDay:
+ *         type: string
+ *         enum: [MORNING, AFTERNOON, NIGHT]
  *       intervals:
  *         type: array
  *         items:
@@ -40,6 +46,7 @@ const Interval = require("./interval.js");
  */
 
 const VISIT_KIND = ["SCHEDULED", "FREQUENT", "NOT EXPECTED", "SPORADIC"];
+const PART_OF_DAYS = ["MORNING", "AFTERNOON", "NIGHT"];
 
 const VisitSchema = new Schema(
   {
@@ -59,6 +66,8 @@ const VisitSchema = new Schema(
       required: true
     },
     dayOfVisit: { type: Date, fake: "date.future" },
+    companions: { type: Integer, fake: "ramdon.number" },
+    partOfDay: { type: String, enum: PART_OF_DAYS, default: "AFTERNOON" },
     intervals: [Interval],
     kind: {
       type: String,
