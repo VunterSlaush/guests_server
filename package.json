@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test":
-      "node backup.js && yarn unseed && mocha --recursive && node restore.js",
+    "test": "node backup.js && yarn unseed && mocha --recursive && node restore.js",
     "seed": "node seed.js",
     "backup": "node backup.js",
     "restore": "node restore.js",
