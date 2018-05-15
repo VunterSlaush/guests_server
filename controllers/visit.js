@@ -38,6 +38,8 @@ async function create({
     if (kind == "FREQUENT") visit.intervals = intervals;
 
     await visit.save();
+    await User.populate(visit, { path: "guest" });
+    await User.populate(visit, { path: "resident" });
     return visit;
   } catch (e) {
     console.log("E", e);
