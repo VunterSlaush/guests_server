@@ -1,4 +1,4 @@
-const { Visit, Check, User } = require("../models");
+const { Visit, Check, User, Community } = require("../models");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
 const moment = require("moment");
@@ -40,6 +40,7 @@ async function create({
     await visit.save();
     await User.populate(visit, { path: "guest" });
     await User.populate(visit, { path: "resident" });
+    await Community.populate(visit, { path: "community" });
     return visit;
   } catch (e) {
     console.log("E", e);
