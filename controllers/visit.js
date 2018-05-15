@@ -28,12 +28,14 @@ async function create({
       resident,
       guest: guest._id,
       community,
-      kind,
-      intervals,
-      companions,
-      partOfDay,
-      dayOfVisit: new Date(dayOfVisit)
+      kind
     });
+    if (kind == "SCHEDULED") {
+      visit.dayOfVisit = new Date(dayOfVisit);
+      visit.companions = companions;
+      visit.partOfDay = partOfDay;
+    }
+    if (kind == "FREQUENT") visit.intervals = intervals;
 
     await visit.save();
     return visit;
@@ -73,7 +75,7 @@ function evaluateVisit(visit) {
     case "FREQUENT":
       return evaluateFrequent(visit);
       break;
-    case "SPORADIC":
+    case "SPORADIC": // TODO FIND IS NOT CHECKED!
       return true;
       break;
     default:
@@ -81,6 +83,7 @@ function evaluateVisit(visit) {
 }
 
 function evaluateScheduled(visit) {
+  // TODO find is not Checked!
   const now = moment();
   const visitDay = moment(visit.dayOfVisit);
   const diff = now.diff(visitDay, "days");
