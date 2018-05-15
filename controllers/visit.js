@@ -169,10 +169,17 @@ async function findByResident(resident, kind, skip, limit) {
   return { visits };
 }
 
+async function destroy(visit, user) {
+  const visitInstance = Visit.find({ _id: visit, resident: user });
+  if (!visitInstance) throw new ApiError("unauthorized", 401);
+  return await visitInstance.remove();
+}
+
 module.exports = {
   create,
   update,
   check,
+  destroy,
   guestIsScheduled,
   findByResident
 };
