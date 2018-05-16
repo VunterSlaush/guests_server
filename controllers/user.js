@@ -1,4 +1,5 @@
 const { User } = require("../models");
+const { simpleMail } = require("../mailer");
 const { generateAuthToken } = require("../auth/utils");
 const ApiError = require("../utils/ApiError");
 const mkdirp = require("mkdirp");
@@ -62,6 +63,11 @@ async function update(id, user, files) {
     }
   );
   return { user: userUpdated };
+}
+
+async function forgotPassword(email) {
+  const user = User.find({ email });
+  if (!user) throw new ApiError("user not found", 404);
 }
 
 module.exports = { auth, create, update, profile, addDevice, removeDevice };
