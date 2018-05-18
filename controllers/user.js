@@ -66,12 +66,13 @@ async function update(id, user, files) {
 }
 
 async function forgotPassword(email) {
-  const user = await User.find({ email });
+  const user = await User.find({ email: email });
   console.log("USER GETTED", user);
   if (!user) throw new ApiError("user not found", 404);
 
   const code = Math.floor(Math.random() * 1000000000);
   user.code = code; // TODO Encrypt this!
+
   await user.save();
   await simpleMail(
     `Aqui esta tu codigo: ${code}`,

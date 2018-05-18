@@ -28,7 +28,7 @@ const handler = require("../utils/ControllerHandler");
 router.post(
   "/",
   user.forgotPassword,
-  handler(user.auth, (req, res, next) => [req.email])
+  handler(user.auth, (req, res, next) => [req.body.email])
 );
 
 /**
@@ -57,7 +57,7 @@ router.post(
  */
 router.post(
   "/code",
-  handler(user.verifyCode, (req, res, next) => [req.email, req.code])
+  handler(user.verifyCode, (req, res, next) => [req.body.email, req.body.code])
 );
 
 /**
@@ -87,9 +87,9 @@ router.post(
 router.post(
   "/changePassword",
   handler(user.changePassword, (req, res, next) => [
-    req.email,
-    req.code,
-    req.password
+    req.body.email,
+    req.body.code,
+    req.body.password
   ])
 );
 module.exports = router;
