@@ -9,6 +9,7 @@ const transport = nodemailer.createTransport({
 });
 
 async function simpleMail(str, subject, receiver) {
+  console.log("Trying Send", str, subject, email);
   const mailOptions = {
     from: '"Vist Me App" <visit_me_app@hotmail.com>', // sender address
     to: receiver, // list of receivers
