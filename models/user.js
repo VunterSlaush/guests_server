@@ -51,6 +51,9 @@ const UserSchema = new Schema(
       es_indexed: true,
       es_type: "text"
     },
+    code: {
+      type: String
+    },
     email: {
       type: String,
       unique: true,

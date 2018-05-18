@@ -66,8 +66,40 @@ async function update(id, user, files) {
 }
 
 async function forgotPassword(email) {
-  const user = User.find({ email });
+  const user = await User.find({ email });
   if (!user) throw new ApiError("user not found", 404);
+  const code = Math.floor(Math.random() * 1000000000);
+  user.code = code; // TODO Encrypt this!
+  await user.save();
+  await simpleMail(
+    `Aqui esta tu codigo: ${code}`,
+    "Codigo de Cambio de Contraseña",
+    user.email
+  );
+  return true;
 }
 
-module.exports = { auth, create, update, profile, addDevice, removeDevice };
+async function verifyCode(email, code) {
+  const user = await User.find({ email, code });
+  if (!user) throw new ApiError("user not found", 404);
+  return true;
+}
+
+async function changePassword(email, code, password) {
+  const user = await User.find({ email, code });
+  if (!user) throw new ApiError("user not found", 404);
+  user.set("password", password);
+  return true;
+}
+
+module.exports = {
+  auth,
+  create,
+  update,
+  profile,
+  addDevice,
+  removeDevice,
+  forgotPassword,
+  verifyCode,
+  changePassword
+};
