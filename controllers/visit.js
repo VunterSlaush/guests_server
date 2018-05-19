@@ -1,4 +1,4 @@
-const { Visit, Check, User, Community } = require("../models");
+const { Visit, Check, User, Community, Company } = require("../models");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
 const moment = require("moment");
@@ -20,32 +20,51 @@ async function create({
 }) {
   try {
     await findIfUserIsOnCommunity(community, resident);
-    const guest = await User.findOneOrCreate(
-      { identification },
-      { identification, name }
-    );
+
+    const guest = await findOrCreateGuest(identification, name, kind);
+
     let visit = new Visit({
       resident,
       guest: guest._id,
       community,
-      kind
+      kind,
+      guestType: kind == "SPORADIC" ? "Company" : "User"
     });
+
     if (kind == "SCHEDULED") {
       visit.dayOfVisit = new Date(dayOfVisit);
       visit.companions = companions;
       visit.partOfDay = partOfDay;
     }
+
     if (kind == "FREQUENT") visit.intervals = intervals;
 
     await visit.save();
-    await User.populate(visit, { path: "guest" });
-    await User.populate(visit, { path: "resident" });
-    await Community.populate(visit, { path: "community" });
+    await populateVisit(visit);
     return visit;
   } catch (e) {
     console.log("E", e);
     throw new ApiError("malformed request", 400);
   }
+}
+
+async function populateVisit(visit) {
+  if (visit.kind == "SPORADIC")
+    await Company.populate(visit, { path: "guest" });
+  else await User.populate(visit, { path: "guest" });
+
+  await User.populate(visit, { path: "resident" });
+  await Community.populate(visit, { path: "community" });
+}
+
+async function findOrCreateGuest(identification, name, kind) {
+  if (kind == "SPORADIC")
+    return await Company.findOneOrCreate({ name }, { name });
+  else
+    return await User.findOneOrCreate(
+      { identification },
+      { identification, name }
+    );
 }
 
 async function update() {
