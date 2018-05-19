@@ -49,7 +49,7 @@ const CompanySchema = new Schema(
 );
 
 // ----- Model Statics ---------- //
-CompanySchema.statics.Selector = "_id name identification image";
+CompanySchema.statics.Selector = "_id name image";
 
 CompanySchema.statics.findOneOrCreate = async function findOneOrCreate(
   condition,
