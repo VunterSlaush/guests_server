@@ -129,7 +129,7 @@ async function findByResident(resident, kind, skip, limit) {
   if (kind != "SCHEDULED") {
     visits = await Visit.find({ resident, kind })
       .select(Visit.residentSelector)
-      .populate("guest", User.Selector)
+      .populate("guest", "_id name image")
       .populate("community")
       .sort({ created_at: -1 })
       .limit(limit)
