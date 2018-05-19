@@ -1,13 +1,7 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp-mail.outlook.com", // hostname
-  secureConnection: false, // TLS requires secureConnection to be false
-  secure: false,
-  port: 587, // port for secure SMTP
-  tls: {
-    ciphers: "SSLv3"
-  },
+  service: "hotmail",
   auth: {
     user: "visit_me_app@hotmail.com",
     pass: "Visitme123"
