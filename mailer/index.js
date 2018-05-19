@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  service: "Hotmail",
+  service: "hotmail",
   auth: {
     user: "visit_me_app@hotmail.com",
     pass: "Visitme123"
