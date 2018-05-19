@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport("SMTP", {
   service: "hotmail",
   auth: {
     user: "visit_me_app@hotmail.com",
@@ -17,13 +17,14 @@ async function simpleMail(str, subject, receiver) {
     text: str
   };
 
-  // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.log(error);
-    }
-    console.log("Message sent: %s", info.messageId);
+  return new Promise(function(resolve, reject) {
+    transporter.sendMail(mailOptions, (error, info) => {
+      resolve(!error);
+      console.log("Message sent: %s", info.messageId);
+    });
   });
+
+  // send mail with defined transport object
 }
 
 module.exports = {

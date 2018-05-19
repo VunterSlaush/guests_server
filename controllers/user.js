@@ -74,12 +74,12 @@ async function forgotPassword(email) {
   user.code = code; // TODO Encrypt this!
 
   await user.save();
-  await simpleMail(
+
+  return await simpleMail(
     `Aqui esta tu codigo: ${code}`,
     "Codigo de Cambio de Contraseña",
     user.email
   );
-  return true;
 }
 
 async function verifyCode(email, code) {
