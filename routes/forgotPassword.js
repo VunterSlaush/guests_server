@@ -28,7 +28,7 @@ const handler = require("../utils/ControllerHandler");
 router.post(
   "/",
   user.forgotPassword,
-  handler(user.auth, (req, res, next) => [req.body.email])
+  handler(user.forgotPassword, (req, res, next) => [req.body.email])
 );
 
 /**
@@ -92,4 +92,5 @@ router.post(
     req.body.password
   ])
 );
+
 module.exports = router;
