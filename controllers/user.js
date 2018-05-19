@@ -70,7 +70,7 @@ async function forgotPassword(email) {
   console.log("USER GETTED", user);
   if (!user) throw new ApiError("user not found", 404);
 
-  const code = Math.floor(Math.random() * 1000000000);
+  const code = Math.floor(Math.random() * MAth.pow(10, 6));
   user.code = code; // TODO Encrypt this!
 
   await user.save();

@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const transport = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   service: "Hotmail",
   auth: {
     user: "visit_me_app@hotmail.com",
