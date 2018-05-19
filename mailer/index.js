@@ -24,8 +24,8 @@ async function simpleMail(str, subject, receiver) {
 
   return new Promise(function(resolve, reject) {
     transporter.sendMail(mailOptions, (error, info) => {
+      console.log("ERROR MAIL", error);
       resolve(!error);
-      console.log("Message sent: %s", info.messageId);
     });
   });
 
