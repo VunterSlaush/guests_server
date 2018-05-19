@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   host: "smtp-mail.outlook.com", // hostname
   secureConnection: false, // TLS requires secureConnection to be false
+  secure: false,
   port: 587, // port for secure SMTP
   tls: {
     ciphers: "SSLv3"
@@ -16,7 +17,7 @@ const transporter = nodemailer.createTransport({
 async function simpleMail(str, subject, receiver) {
   console.log("Trying Send", str, subject, receiver);
   const mailOptions = {
-    from: '"Vist Me App" <visit_me_app@hotmail.com>', // sender address
+    from: "visit_me_app@hotmail.com", // sender address
     to: receiver, // list of receivers
     subject, // Subject line
     text: str
