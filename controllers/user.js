@@ -66,7 +66,7 @@ async function update(id, user, files) {
 }
 
 async function forgotPassword(email) {
-  const user = await User.find({ email: email });
+  const user = await User.findOne({ email: email });
   console.log("USER GETTED", user);
   if (!user) throw new ApiError("user not found", 404);
 
@@ -83,13 +83,13 @@ async function forgotPassword(email) {
 }
 
 async function verifyCode(email, code) {
-  const user = await User.find({ email, code });
+  const user = await User.findOne({ email, code });
   if (!user) throw new ApiError("user not found", 404);
   return true;
 }
 
 async function changePassword(email, code, password) {
-  const user = await User.find({ email, code });
+  const user = await User.findOne({ email, code });
   if (!user) throw new ApiError("user not found", 404);
   user.set("password", password);
   return true;
