@@ -93,6 +93,7 @@ async function changePassword(email, code, password) {
   const user = await User.findOne({ email, code });
   if (!user) throw new ApiError("user not found", 404);
   user.set("password", password);
+  await user.save();
   return { success: true };
 }
 
