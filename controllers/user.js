@@ -74,25 +74,25 @@ async function forgotPassword(email) {
   user.code = code; // TODO Encrypt this!
 
   await user.save();
-
-  return await simpleMail(
+  const success = await simpleMail(
     `Aqui esta tu codigo: ${code}`,
     "Codigo de Cambio de Contraseña",
     user.email
   );
+  return { success };
 }
 
 async function verifyCode(email, code) {
   const user = await User.findOne({ email, code });
   if (!user) throw new ApiError("user not found", 404);
-  return true;
+  return { success: true };
 }
 
 async function changePassword(email, code, password) {
   const user = await User.findOne({ email, code });
   if (!user) throw new ApiError("user not found", 404);
   user.set("password", password);
-  return true;
+  return { success: true };
 }
 
 module.exports = {
