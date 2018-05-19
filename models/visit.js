@@ -48,7 +48,6 @@ const Interval = require("./interval.js");
 const VISIT_KIND = ["SCHEDULED", "FREQUENT", "NOT EXPECTED", "SPORADIC"];
 const PART_OF_DAYS = ["MORNING", "AFTERNOON", "NIGHT"];
 const GUEST_TYPE_ENUM = ["User", "Company"];
-
 const VisitSchema = new Schema(
   {
     resident: {
@@ -79,7 +78,8 @@ const VisitSchema = new Schema(
     guestType: {
       type: String,
       default: "User",
-      enum: GUEST_TYPE_ENUM
+      enum: GUEST_TYPE_ENUM,
+      required: true
     }
   },
   {
@@ -91,6 +91,6 @@ const VisitSchema = new Schema(
 );
 
 VisitSchema.statics.residentSelector =
-  "guest community dayOfVisit intervals kind";
+  "guest community dayOfVisit intervals kind guestType";
 
 module.exports = mongoose.model("Visit", VisitSchema);
