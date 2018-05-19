@@ -27,7 +27,6 @@ const handler = require("../utils/ControllerHandler");
  */
 router.post(
   "/",
-  user.forgotPassword,
   handler(user.forgotPassword, (req, res, next) => [req.body.email])
 );
 
