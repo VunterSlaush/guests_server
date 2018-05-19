@@ -52,7 +52,7 @@ const UserSchema = new Schema(
       es_type: "text"
     },
     code: {
-      type: String
+      type: Number
     },
     email: {
       type: String,

@@ -83,6 +83,7 @@ async function forgotPassword(email) {
 }
 
 async function verifyCode(email, code) {
+  console.log("US ", email, code);
   const user = await User.findOne({ email, code });
   if (!user) throw new ApiError("user not found", 404);
   return { success: true };
