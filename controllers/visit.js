@@ -137,7 +137,6 @@ async function findByResident(resident, kind, skip, limit) {
       .sort({ created_at: -1 })
       .limit(limit)
       .skip(skip);
-    console.log("VISITS!", visits);
   } else {
     visits = await Visit.aggregate([
       {
