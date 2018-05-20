@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 async function find(query) {
   const companies = await Company.find({
-    authors: { $regex: query, $options: "i" }
+    name: { $regex: query, $options: "i" }
   }).limit(30);
   return { companies };
 }
