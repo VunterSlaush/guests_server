@@ -53,6 +53,8 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
+app.use("/storage", express.static(__dirname + "/storage"));
+
 const port = process.env.PORT || 3000;
 const server = app.listen(port);
 
