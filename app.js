@@ -33,6 +33,7 @@ app.use(cors());
 app.use(fileUpload());
 app.use(auth.init());
 app.use("/api", routes);
+app.use("/storage", express.static(__dirname + "/storage"));
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(function(req, res, next) {
@@ -52,8 +53,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
-
-app.use("/storage", express.static(__dirname + "/storage"));
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port);
