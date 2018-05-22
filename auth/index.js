@@ -10,17 +10,26 @@ const strategies = require("require-all")({
 });
 
 function init() {
-  for (str in strategies) {
-    passport.use(strategies[str]);
-  }
+  for (str in strategies)
+    passport.use(str.replace("Strategy.js", ""), strategies[str]);
+
   passport.serializeUser((user, done) => done(null, user));
   passport.deserializeUser((user, done) => done(null, user));
 
   return passport.initialize();
 }
 
-function identifyAuthProvider(req, res, next) {
+function user(req, res, next) {
   return passport.authenticate("local", { session: false }, (err, data) => {
+    if (err || !data) return res.status(401).send("Usuario no Encontrado");
+    req.user = data;
+    if (req.user.redirect) res.redirect(req.user.redirect);
+    else next();
+  })(req, res, next);
+}
+
+function security(req, res, next) {
+  return passport.authenticate("security", { session: false }, (err, data) => {
     if (err || !data) return res.status(401).send("Usuario no Encontrado");
     req.user = data;
     if (req.user.redirect) res.redirect(req.user.redirect);
@@ -32,6 +41,7 @@ module.exports = {
   init,
   passport,
   utils,
-  identifyAuthProvider,
+  user,
+  security,
   jwt: () => passport.authenticate("jwt", { session: false })
 };

@@ -14,7 +14,7 @@ const auth = require("../auth");
  * @swagger
  * /user/auth:
  *   post:
- *     description: authenticate the user via all SNS on the App
+ *     description: authenticate the user
  *     tags:
  *      - User
  *     produces:
@@ -46,7 +46,47 @@ const auth = require("../auth");
  */
 router.all(
   "/auth",
-  auth.identifyAuthProvider,
+  auth.user,
+  handler(user.auth, (req, res, next) => [req.user])
+);
+
+/**
+ * @swagger
+ * /user/auth/security:
+ *   post:
+ *     description: authenticate the security user
+ *     tags:
+ *      - User
+ *     produces:
+ *      - application/json
+ *     security: []
+ *     parameters:
+ *       - name: body
+ *         in:  body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               description: user password, used to authenticate via local authentication, only require when authenticate via local
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: user information and authorization token
+ *         schema:
+ *            type: object
+ *            properties:
+ *              token:
+ *                type: string
+ *              user:
+ *                $ref: '#/definitions/User'
+ *			 401:
+ *         description: Unauthorized user, it means that the credentials passed are not valid
+ */
+router.all(
+  "/auth/security",
+  auth.security,
   handler(user.auth, (req, res, next) => [req.user])
 );
 
