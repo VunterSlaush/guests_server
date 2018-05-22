@@ -32,8 +32,8 @@ app.use(cookieParser());
 app.use(cors());
 app.use(fileUpload());
 app.use(auth.init());
+app.use("/static", express.static(__dirname + "/storage"));
 app.use("/api", routes);
-app.use("/storage", express.static(__dirname + "/storage"));
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(function(req, res, next) {
