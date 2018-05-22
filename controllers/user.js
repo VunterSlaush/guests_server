@@ -53,15 +53,16 @@ async function profile(id) {
   return user;
 }
 
-async function update(id, user, files) {
-  let userUpdated = await User.findOneAndUpdate(
-    { _id: id },
-    { $set: user },
-    {
-      runSettersOnQuery: true,
-      new: true
-    }
-  );
+async function update(id, user, image) {
+  let userUpdated = await User.findOne({
+    _id: id
+  });
+  userUpdated.set(user);
+  if (image) {
+    let imageUrl = await uploadImage(userUpdated, image);
+    userUpdated.image = imageUrl;
+  }
+  await userUpdated.save();
   return { user: userUpdated };
 }
 

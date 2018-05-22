@@ -119,7 +119,11 @@ secureRouter.use(auth.jwt());
  */
 secureRouter.put(
   "/me",
-  handler(user.update, (req, res, next) => [req.user.id, req.body, req.files])
+  handler(user.update, (req, res, next) => [
+    req.user.id,
+    req.body,
+    !req.files ? null : req.files.image
+  ])
 );
 
 /**
