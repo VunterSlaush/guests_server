@@ -7,7 +7,7 @@ async function authenticate(userInfo, next) {
     let user = await User.findById(userInfo.id);
     return next(null, user);
   } catch (e) {
-    return next(new ApiError("User not found", 401), null);
+    return next(new ApiError("Usuario no Encontrado", 401), null);
   }
 }
 

@@ -10,9 +10,16 @@ async function findIfUserIsGranted(communityId, user) {
       kind: "ADMINISTRATOR"
     });
   } catch (e) {
-    throw new ApiError("CommunityUser Not Found", 404);
+    throw new ApiError(
+      "No tiene los privilegios para realizar esta accion",
+      404
+    );
   }
-  if (!community) throw new ApiError("Unauthorized to do this action", 401);
+  if (!community)
+    throw new ApiError(
+      "No tiene los privilegios para realizar esta accion",
+      401
+    );
   return community;
 }
 
@@ -24,9 +31,16 @@ async function findIfUserIsOnCommunity(communityId, user) {
       community: communityId
     });
   } catch (e) {
-    throw new ApiError("CommunityUser Not Found", 404);
+    throw new ApiError(
+      "No tiene los privilegios para realizar esta accion",
+      404
+    );
   }
-  if (!community) throw new ApiError("Unauthorized to do this action", 401);
+  if (!community)
+    throw new ApiError(
+      "No tiene los privilegios para realizar esta accion",
+      401
+    );
   return community;
 }
 
@@ -39,9 +53,16 @@ async function findIfUserIsCommunitySecure(communityId, user) {
       $or: [{ kind: "ADMINISTRATOR" }, { kind: "SECURITY" }]
     });
   } catch (e) {
-    throw new ApiError("CommunityUser Not Found", 404);
+    throw new ApiError(
+      "No tiene los privilegios para realizar esta accion",
+      404
+    );
   }
-  if (!community) throw new ApiError("Unauthorized to do this action", 401);
+  if (!community)
+    throw new ApiError(
+      "No tiene los privilegios para realizar esta accion",
+      401
+    );
   return community;
 }
 

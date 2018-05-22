@@ -44,7 +44,7 @@ async function create({
     return visit;
   } catch (e) {
     console.log("E", e);
-    throw new ApiError("malformed request", 400);
+    throw new ApiError("Error en los datos ingresados", 400);
   }
 }
 

@@ -10,7 +10,7 @@ async function create({ name, address }) {
     await community.save();
     return community;
   } catch (e) {
-    throw new ApiError("malformed request", 400);
+    throw new ApiError("Error en los datos ingresados", 400);
   }
 }
 
@@ -77,7 +77,7 @@ async function people(communityId, skip, limit) {
   try {
     return await CommunityUser.find({ community: communityId });
   } catch (e) {
-    throw new ApiError("Community not found", 404);
+    throw new ApiError("Comunidad no Encontrada", 404);
   }
 }
 

@@ -9,7 +9,7 @@ async function auth(user) {
     var token = generateAuthToken(user);
     return { token: token, user: user };
   }
-  throw new ApiError("user not found", 404);
+  throw new ApiError("Usuario no encontrado", 404);
 }
 
 async function create(info, image) {
@@ -23,8 +23,8 @@ async function create(info, image) {
     return auth(user);
   } catch (e) {
     if (e.code && e.code == 11000)
-      throw new ApiError("the Identification or email is repeated", 409);
-    throw new ApiError("invalid parameters", 400);
+      throw new ApiError("La cedula o el correo esta repetido", 409);
+    throw new ApiError("Error en los parametros ingresados", 400);
   }
 }
 
@@ -69,7 +69,7 @@ async function update(id, user, image) {
 async function forgotPassword(email) {
   const user = await User.findOne({ email: email });
   console.log("USER GETTED", user);
-  if (!user) throw new ApiError("user not found", 404);
+  if (!user) throw new ApiError("Usuario no encontrado", 404);
 
   const code = Math.floor(Math.random() * Math.pow(10, 6));
   user.code = code; // TODO Encrypt this!
@@ -86,13 +86,13 @@ async function forgotPassword(email) {
 async function verifyCode(email, code) {
   console.log("US ", email, code);
   const user = await User.findOne({ email, code });
-  if (!user) throw new ApiError("user not found", 404);
+  if (!user) throw new ApiError("Usuario no encontrado", 404);
   return { success: true };
 }
 
 async function changePassword(email, code, password) {
   const user = await User.findOne({ email, code });
-  if (!user) throw new ApiError("user not found", 404);
+  if (!user) throw new ApiError("Usuario no encontrado", 404);
   user.set("password", password);
   await user.save();
   return { success: true };

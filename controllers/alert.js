@@ -13,7 +13,7 @@ async function create(info, author) {
     return alert;
   } catch (e) {
     console.log("E", e);
-    throw new ApiError("malformed request", 400);
+    throw new ApiError("Error en los datos ingresados", 400);
   }
 }
 

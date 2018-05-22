@@ -9,7 +9,7 @@ async function create(community, userToAdd, kind, user) {
     await communityUser.save();
     return communityUser;
   } catch (e) {
-    throw new ApiError("malformed request", 400);
+    throw new ApiError("Error en los datos ingresados", 400);
   }
 }
 

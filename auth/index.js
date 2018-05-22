@@ -21,7 +21,7 @@ function init() {
 
 function identifyAuthProvider(req, res, next) {
   return passport.authenticate("local", { session: false }, (err, data) => {
-    if (err || !data) return res.status(401).send("Unauthorized");
+    if (err || !data) return res.status(401).send("Usuario no Encontrado");
     req.user = data;
     if (req.user.redirect) res.redirect(req.user.redirect);
     else next();
