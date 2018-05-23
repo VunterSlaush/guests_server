@@ -38,12 +38,9 @@ async function removeDevice(device, user) {
 
 async function uploadImage(user, image) {
   return new Promise((resolve, reject) => {
-    mkdirp(`storage/users/${user._id}`, err => {
-      if (err) return reject();
-      image.mv(`storage/users/${user._id}/${image.name}`, err => {
-        if (err) reject(err);
-        resolve(`storage/users/${user._id}/${image.name}`);
-      });
+    image.mv(`storage/${image.name}`, err => {
+      if (err) reject(err);
+      resolve(`storage/${image.name}`);
     });
   });
 }

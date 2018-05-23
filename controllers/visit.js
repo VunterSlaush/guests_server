@@ -67,8 +67,12 @@ async function findOrCreateGuest(identification, name, kind) {
     );
 }
 
-async function update() {
-  /* TODO*/
+async function update(visitId, info, user) {
+  const visit = await Visit.findOne({ _id: visitId, resident: user.id });
+  if (!visit) throw new ApiError("Visita no encontrada", 404);
+  visit.set(info);
+  await visit.save();
+  return visit;
 }
 
 async function check(visit, type) {
