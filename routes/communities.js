@@ -271,7 +271,9 @@ router.post(
   "/:community/shouldEnter",
   handler(visit.guestIsScheduled, (req, res, next) => [
     req.params.community,
-    req.body.guest,
+    req.body.identification,
+    req.body.email,
+    req.body.name,
     req.user
   ])
 );

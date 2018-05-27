@@ -298,6 +298,27 @@ secureRouter.get(
 
 /**
  * @swagger
+ * /user/me/security/communities:
+ *   get:
+ *     description: get the Security Communities!
+ *     tags:
+ *      - User
+ *      - Community
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: user information updated
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+secureRouter.get(
+  "/me/security/communities",
+  handler(community.securityCommunities, (req, res, next) => [req.user.id])
+);
+
+/**
+ * @swagger
  * /user/me/alerts/{type}:
  *   get:
  *     description: get the User Communities!

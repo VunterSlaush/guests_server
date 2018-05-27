@@ -81,16 +81,40 @@ async function check(visit, type) {
   return check;
 }
 
-async function guestIsScheduled(community, guest, userWhoAsk) {
+async function guestIsScheduled(
+  community,
+  identification,
+  email,
+  name,
+  userWhoAsk
+) {
   await findIfUserIsCommunitySecure(community, userWhoAsk);
+  const guest = await findGuest(identification, email, name);
+  if (!guest) return { error: "Visitante no Existente" };
+
   const visit = await Visit.find({
-    guest: guest,
+    guest: guest.id,
     community: community
   }).sort({
     created_at: -1
   });
   const visitsFiltered = visit.filter(item => evaluateVisit(item));
-  return visitsFiltered;
+  return visitsFiltered.length > 0
+    ? fillVisit(visitsFiltered[0])
+    : { error: "Visita no Encontrada" };
+}
+
+async function fillVisit(visit) {
+  return await Visit.findOne({ id: visit.id })
+    .populate("guest")
+    .populate("resident")
+    .populate("community");
+}
+
+async function findGuest(identification, email, name) {
+  const user = await User.findOne({ $or: [{ identification }, { email }] });
+  const company = await Company.findOne({ name });
+  return user ? user : company;
 }
 
 function evaluateVisit(visit) {
