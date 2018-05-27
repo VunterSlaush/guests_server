@@ -44,12 +44,12 @@ async function findIfUserIsOnCommunity(communityId, user) {
   return community;
 }
 
-async function findIfUserIsCommunitySecure(communityId, user) {
-  let community;
+async function findIfUserIsCommunitySecure(community, user) {
+  let communityFound;
   try {
-    community = await CommunityUser.findOne({
+    communityFound = await CommunityUser.findOne({
       user,
-      communityId,
+      community,
       $or: [{ kind: "ADMINISTRATOR" }, { kind: "SECURITY" }]
     });
   } catch (e) {
@@ -63,7 +63,7 @@ async function findIfUserIsCommunitySecure(communityId, user) {
       "No tiene los privilegios para realizar esta accion",
       401
     );
-  return community;
+  return communityFound;
 }
 
 module.exports = {
