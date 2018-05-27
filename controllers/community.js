@@ -118,5 +118,6 @@ module.exports = {
   destroy,
   details,
   userCommunities,
+  securityCommunities,
   people
 };
