@@ -101,10 +101,13 @@ async function guestIsScheduled(
 
   const visitsFiltered = visit.filter(item => evaluateVisit(item));
 
-  console.log("Visits: ", visitsFiltered);
-  return visitsFiltered.length > 0
-    ? fillVisit(visitsFiltered[0])
-    : { error: "Visita no Encontrada" };
+  const visitFounded =
+    visitsFiltered.length > 0
+      ? await fillVisit(visitsFiltered[0])
+      : { error: "Visita no Encontrada" };
+
+  console.log("VISIT ", visit);
+  return visitFounded;
 }
 
 async function fillVisit(visit) {
@@ -115,11 +118,8 @@ async function fillVisit(visit) {
 }
 
 async function findGuest(identification, email, name) {
-  console.log("Guest ", identification, email, name);
   const user = await User.findOne({ $or: [{ identification }, { email }] });
   const company = await Company.findOne({ name });
-
-  console.log("FOUNDED ? ", user, company);
   return user ? user : company;
 }
 
