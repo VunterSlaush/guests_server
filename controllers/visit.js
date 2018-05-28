@@ -94,7 +94,7 @@ async function guestIsScheduled(
 
   const visit = await Visit.find({
     guest: guest.id,
-    community: community
+    community
   }).sort({
     created_at: -1
   });
@@ -112,6 +112,7 @@ async function fillVisit(visit) {
 }
 
 async function findGuest(identification, email, name) {
+  console.log("Guest ", identification, email, name);
   const user = await User.findOne({ $or: [{ identification }, { email }] });
   const company = await Company.findOne({ name });
   return user ? user : company;
