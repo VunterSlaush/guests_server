@@ -106,7 +106,7 @@ async function guestIsScheduled(
       ? await fillVisit(visitsFiltered[0])
       : { error: "Visita no Encontrada" };
 
-  console.log("VISIT ", visit);
+  console.log("VISIT ", visitFounded);
   return visitFounded;
 }
 
