@@ -112,7 +112,7 @@ async function guestIsScheduled(
 
 async function fillVisit(visit) {
   console.log("FILLING WITH", visit);
-  return await Visit.findOne({ id: visit.id })
+  return await Visit.findOne({ _id: visit.id })
     .populate("guest")
     .populate("resident")
     .populate("community");
