@@ -110,7 +110,7 @@ router.delete(
  */
 router.post(
   "/:visit/checkIn",
-  handler(visit.checkIn, (req, res, next) => [req.params.visit, "IN", req.user])
+  handler(visit.check, (req, res, next) => [req.params.visit, "IN", req.user])
 );
 
 /**
