@@ -16,7 +16,8 @@ async function create({
   intervals,
   companions,
   partOfDay,
-  dayOfVisit
+  dayOfVisit,
+  timezone
 }) {
   try {
     await findIfUserIsOnCommunity(community, resident);
@@ -28,7 +29,8 @@ async function create({
       guest: guest._id,
       community,
       kind,
-      guestType: kind == "SPORADIC" ? "Company" : "User"
+      guestType: kind == "SPORADIC" ? "Company" : "User",
+      timezone
     });
 
     if (kind == "SCHEDULED") {
