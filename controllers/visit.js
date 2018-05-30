@@ -132,7 +132,7 @@ async function evaluateVisit(visit) {
       return evaluateScheduled(visit) && check == null ? visit : null;
       break;
     case "FREQUENT":
-      return evaluateFrequent(visit) && check == null ? visit : null;
+      return evaluateFrequent(visit) ? visit : null;
       break;
     case "SPORADIC":
       return check == null;
@@ -162,7 +162,7 @@ function evaluateFrequent(visit) {
 
 async function findByResident(resident, kind, skip, limit) {
   let visits;
-  if (kind != "SCHEDULED") {
+  if (kind == "FREQUENT") {
     visits = await Visit.find({ resident, kind })
       .select(Visit.residentSelector)
       .populate({
@@ -173,7 +173,7 @@ async function findByResident(resident, kind, skip, limit) {
       .sort({ created_at: -1 })
       .limit(limit)
       .skip(skip);
-  } else {
+  } else if (kind == "SCHEDULED") {
     visits = await Visit.aggregate([
       {
         $match: {
@@ -185,6 +185,58 @@ async function findByResident(resident, kind, skip, limit) {
       {
         $lookup: {
           from: "users",
+          localField: "guest",
+          foreignField: "_id",
+          as: "guest"
+        }
+      },
+      {
+        $lookup: {
+          from: "communities",
+          localField: "community",
+          foreignField: "_id",
+          as: "community"
+        }
+      },
+      {
+        $lookup: {
+          from: "checks",
+          localField: "_id",
+          foreignField: "visit",
+          as: "checks"
+        }
+      },
+      {
+        $match: {
+          checks: { $size: 0 }
+        }
+      },
+      {
+        $unwind: "$community"
+      },
+      {
+        $unwind: "$guest"
+      },
+      {
+        $project: {
+          resident: 0
+        }
+      },
+      { $sort: { created_at: -1 } },
+      { $skip: skip },
+      { $limit: limit }
+    ]);
+  } else {
+    visits = await Visit.aggregate([
+      {
+        $match: {
+          resident: mongoose.Types.ObjectId(resident),
+          kind
+        }
+      },
+      {
+        $lookup: {
+          from: "companies",
           localField: "guest",
           foreignField: "_id",
           as: "guest"
