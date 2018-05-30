@@ -98,15 +98,16 @@ async function guestIsScheduled(
   }).sort({
     created_at: -1
   });
+  const visits = await Promise.all(visit.map(item => evaluateVisit(item)));
 
-  const visitsFiltered = visit.filter(item => evaluateVisit(item));
+  const visitsFiltered = visits.filter(item => item != null);
 
   const visitFounded =
     visitsFiltered.length > 0
       ? await fillVisit(visitsFiltered[0])
       : { error: "Visita no Encontrada" };
 
-  console.log("VISIT ", visitFounded);
+  //console.log("VISIT ", visitFounded);
   return visitFounded;
 }
 
@@ -124,24 +125,23 @@ async function findGuest(identification, email, name) {
   return user ? user : company;
 }
 
-function evaluateVisit(visit) {
-  //const check = await Check.findOne({ visit: visit.id });
+async function evaluateVisit(visit) {
+  const check = await Check.findOne({ visit: visit.id });
   switch (visit.kind) {
     case "SCHEDULED":
-      return evaluateScheduled(visit);
+      return evaluateScheduled(visit) && check == null ? visit : null;
       break;
     case "FREQUENT":
-      return evaluateFrequent(visit);
+      return evaluateFrequent(visit) && check == null ? visit : null;
       break;
-    case "SPORADIC": // TODO FIND IS NOT CHECKED!
-      return true;
+    case "SPORADIC":
+      return check == null;
       break;
     default:
   }
 }
 
 function evaluateScheduled(visit) {
-  // TODO find is not Checked!
   const now = moment();
   const visitDay = moment(visit.dayOfVisit);
   const diff = now.diff(visitDay, "days");
