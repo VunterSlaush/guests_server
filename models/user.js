@@ -72,6 +72,9 @@ const UserSchema = new Schema(
       type: Address
     },
     image: { type: String, fake: "internet.avatar" },
+    timezone: {
+      type: String
+    },
     cellPhone: { type: String, fake: "phone.phoneNumber" },
     homePhone: { type: String, fake: "phone.phoneNumber" },
     workPhone: { type: String, fake: "phone.phoneNumber" }

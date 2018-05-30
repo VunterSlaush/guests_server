@@ -181,7 +181,7 @@ async function findByResident(resident, kind, skip, limit) {
         $match: {
           resident: mongoose.Types.ObjectId(resident),
           kind,
-          dayOfVisit: { $gte: new Date() }
+          dayOfVisit: { $gte: new Date() } // TODO TIMEZONE COMPARATION!
         }
       },
       {
