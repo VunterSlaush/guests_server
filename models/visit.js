@@ -38,6 +38,9 @@ const Interval = require("./interval.js");
  *       partOfDay:
  *         type: string
  *         enum: [MORNING, AFTERNOON, NIGHT]
+ *       timezone:
+ *         type: string
+ *         description: the timezone of the visit!
  *       intervals:
  *         type: array
  *         items:
@@ -79,6 +82,10 @@ const VisitSchema = new Schema(
       type: String,
       default: "User",
       enum: GUEST_TYPE_ENUM,
+      required: true
+    },
+    timezone: {
+      type: String,
       required: true
     }
   },
