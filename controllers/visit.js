@@ -176,13 +176,23 @@ async function findByResident(resident, timezone, kind, skip, limit) {
       .limit(limit)
       .skip(skip);
   } else if (kind == "SCHEDULED") {
+    console.log(
+      "FIND WITH",
+      timezone,
+      moment()
+        .tz(timezone)
+        .format("YYYY-MM-DD")
+    );
+
     visits = await Visit.aggregate([
       {
         $match: {
           resident: mongoose.Types.ObjectId(resident),
           kind,
           dayOfVisit: {
-            $gte: moment().tz(timezone)
+            $gte: moment()
+              .tz(timezone)
+              .format("YYYY-MM-DD")
           }
         }
       },
