@@ -146,6 +146,9 @@ async function evaluateVisit(visit) {
 function evaluateScheduled(visit) {
   const now = moment().tz(visit.timezone);
   const visitDay = moment(visit.dayOfVisit);
+
+  console.log("EVALUATING SCHEDULED", visit, now, visitDay);
+
   const diff = now.diff(visitDay, "days");
   return diff <= 0;
 }
