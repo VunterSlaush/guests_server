@@ -145,14 +145,15 @@ async function evaluateVisit(visit) {
 
 function evaluateScheduled(visit) {
   const now = moment().tz(visit.timezone);
-  const visitDay = moment(visit.dayOfVisit).tz(visit.timezone);
+  const visitDay = moment(visit.dayOfVisit);
 
-  console.log("EVALUATING SCHEDULED", visit, now, visitDay);
-
-  const diff = now.diff(visitDay, "hours");
-
-  console.log("EVALUATING SCHEDULED", visit, now, visitDay, diff);
-  return diff <= 24;
+  console.log(
+    "EVALUATING SCHEDULED",
+    visit,
+    now.format("DD/MM/YYYY"),
+    visitDay.format("DD/MM/YYYY")
+  );
+  return visitDay.format("DD/MM/YYYY") === now.format("DD/MM/YYYY");
 }
 
 function evaluateFrequent(visit) {
