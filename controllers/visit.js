@@ -150,6 +150,8 @@ function evaluateScheduled(visit) {
   console.log("EVALUATING SCHEDULED", visit, now, visitDay);
 
   const diff = now.diff(visitDay, "days");
+
+  console.log("EVALUATING SCHEDULED", visit, now, visitDay, diff);
   return diff <= 0;
 }
 
