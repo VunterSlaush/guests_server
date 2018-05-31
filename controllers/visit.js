@@ -1,7 +1,7 @@
 const { Visit, Check, User, Community, Company } = require("../models");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
-const moment = require("moment");
+const moment = require("moment-timezone");
 const {
   findIfUserIsOnCommunity,
   findIfUserIsCommunitySecure
@@ -144,7 +144,7 @@ async function evaluateVisit(visit) {
 }
 
 function evaluateScheduled(visit) {
-  const now = moment();
+  const now = moment().tz(visit.timezone);
   const visitDay = moment(visit.dayOfVisit);
   const diff = now.diff(visitDay, "days");
   return diff <= 0;
@@ -152,7 +152,7 @@ function evaluateScheduled(visit) {
 
 function evaluateFrequent(visit) {
   const { intervals } = visit;
-  const now = moment();
+  const now = moment().tz(visit.timezone);
   const day = now.day();
   const hour = now.hour() * 100 + now.minutes();
   return (
@@ -162,7 +162,7 @@ function evaluateFrequent(visit) {
   );
 }
 
-async function findByResident(resident, kind, skip, limit) {
+async function findByResident(resident, timezone, kind, skip, limit) {
   let visits;
   if (kind == "FREQUENT") {
     visits = await Visit.find({ resident, kind })
@@ -181,7 +181,9 @@ async function findByResident(resident, kind, skip, limit) {
         $match: {
           resident: mongoose.Types.ObjectId(resident),
           kind,
-          dayOfVisit: { $gte: new Date() } // TODO TIMEZONE COMPARATION!
+          dayOfVisit: {
+            $gte: moment().tz(timezone)
+          }
         }
       },
       {

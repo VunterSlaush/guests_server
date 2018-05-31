@@ -194,6 +194,7 @@ secureRouter.get(
   "/me/visits/:type",
   handler(visit.findByResident, (req, res, next) => [
     req.user.id,
+    req.user.timezone,
     req.params.type,
     !req.query.skip ? 0 : Number(req.query.skip),
     !req.query.limit ? 30 : Number(req.query.limit)

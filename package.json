@@ -34,7 +34,7 @@
     "m-seeds": "^1.2.3",
     "mkdirp": "^0.5.1",
     "mocha": "^4.0.1",
-    "moment-timezone": "^0.5.14",
+    "moment-timezone": "^0.5.17",
     "mongodb-backup": "^1.6.9",
     "mongodb-restore": "^1.6.2",
     "mongoosastic": "^4.3.0",
