@@ -149,10 +149,10 @@ function evaluateScheduled(visit) {
 
   console.log("EVALUATING SCHEDULED", visit, now, visitDay);
 
-  const diff = now.diff(visitDay, "days");
+  const diff = now.diff(visitDay, "hours");
 
   console.log("EVALUATING SCHEDULED", visit, now, visitDay, diff);
-  return diff <= 0;
+  return diff <= 24;
 }
 
 function evaluateFrequent(visit) {
