@@ -95,12 +95,19 @@ async function changePassword(email, code, password) {
   return { success: true };
 }
 
+async function findFirstIdentificationMatch(identification) {
+  return await User.findOne({
+    identification: { $regex: identification, $options: "i" }
+  });
+}
+
 module.exports = {
   auth,
   create,
   update,
   profile,
   addDevice,
+  findFirstIdentificationMatch,
   removeDevice,
   forgotPassword,
   verifyCode,

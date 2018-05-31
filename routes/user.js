@@ -203,6 +203,28 @@ secureRouter.get(
 
 /**
  * @swagger
+ * /user/findFirstUser:
+ *   get:
+ *     description: get the first user that match with that id!
+ *     tags:
+ *      - User
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: user information updated
+ *         schema:
+ *             $ref: '#/definitions/User'
+ */
+secureRouter.get(
+  "/findFirstUser",
+  handler(user.findFirstIdentificationMatch, (req, res, next) => [
+    req.query.identification
+  ])
+);
+
+/**
+ * @swagger
  * /user/me:
  *   get:
  *     description: get the User Profile of an authenticate user
