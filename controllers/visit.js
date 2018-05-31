@@ -190,9 +190,11 @@ async function findByResident(resident, timezone, kind, skip, limit) {
           resident: mongoose.Types.ObjectId(resident),
           kind,
           dayOfVisit: {
-            $gte: moment()
-              .tz(timezone)
-              .format("YYYY-MM-DD")
+            $gte: new Date(
+              moment()
+                .tz(timezone)
+                .format("YYYY-MM-DD")
+            )
           }
         }
       },
