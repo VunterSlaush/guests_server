@@ -125,7 +125,7 @@ async function requestAccess(
   );
   const communityUser = await findCommunityUserByIdOrReference(
     communityId,
-    identification,
+    residentIdentification,
     reference
   );
   if (!communityUser) throw new ApiError("Residente no encontrado", 401);
