@@ -143,7 +143,11 @@ async function requestAccess(
 
   const photos = await uploadFiles(files);
   await send(resident.devices, "UNEXPECTED VISIT", {
-    visit: { ...visit, guest: guest.toJSON(), resident: resident.toJSON() },
+    visit: {
+      ...visit.toJSON(),
+      guest: guest.toJSON(),
+      resident: resident.toJSON()
+    },
     photos
   });
   console.log(
