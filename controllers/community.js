@@ -133,10 +133,10 @@ async function requestAccess(
   const resident = await User.find({ _id: communityUser.user });
   const visit = new Visit({
     community: communityId,
-    resident,
-    guest,
+    resident: resident.id,
+    guest: guest.id,
     kind: "NOT EXPECTED",
-    creator: user
+    creator: user.id
   });
   await visit.save();
   const photos = await uploadFiles(files);
