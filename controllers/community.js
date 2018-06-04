@@ -193,7 +193,7 @@ async function findCommunityUserByIdOrReference(
     });
 
   if (!communityUser)
-    communityUSer = await CommunityUser.findOne({
+    communityUser = await CommunityUser.findOne({
       community: communityId,
       reference
     });
