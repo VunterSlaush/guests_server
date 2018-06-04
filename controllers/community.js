@@ -136,7 +136,8 @@ async function requestAccess(
     resident: resident.id,
     guest: guest.id,
     kind: "NOT EXPECTED",
-    creator: user.id
+    creator: user.id,
+    timezone: resident.timezone
   });
   await visit.save();
   const photos = await uploadFiles(files);
