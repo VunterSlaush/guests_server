@@ -125,6 +125,7 @@ router.post(
   handler(communityUser.create, (req, res, next) => [
     req.params.comunity,
     req.body.user,
+    null,
     "SECURITY",
     req.user
   ])
@@ -165,6 +166,7 @@ router.post(
   handler(communityUser.create, (req, res, next) => [
     req.params.comunity,
     req.body.user,
+    req.body.reference,
     "RESIDENT",
     req.user
   ])
@@ -205,6 +207,7 @@ router.post(
   handler(communityUser.create, (req, res, next) => [
     req.params.comunity,
     req.body.user,
+    req.body.reference,
     "ADMINISTRATOR",
     req.user
   ])

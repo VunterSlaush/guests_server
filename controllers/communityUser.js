@@ -2,10 +2,15 @@ const { Community, CommunityUser } = require("../models");
 const ApiError = require("../utils/ApiError");
 const { findIfUserIsGranted } = require("./utils");
 
-async function create(community, userToAdd, kind, user) {
+async function create(community, userToAdd, kind, reference, user) {
   try {
     await findIfUserIsGranted(community, user);
-    let communityUser = new CommunityUser({ community, userToAdd, kind });
+    let communityUser = new CommunityUser({
+      community,
+      userToAdd,
+      kind,
+      reference
+    });
     await communityUser.save();
     return communityUser;
   } catch (e) {

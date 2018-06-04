@@ -27,6 +27,9 @@ const Post = require;
  *       community:
  *         readOnly: true
  *         type: string
+ *       reference:
+ *         type: string
+ *         description: Reference is use to know in what apt or office live the resident
  */
 
 const KINDS = ["SECURITY", "RESIDENT", "ADMINISTRATOR"];
@@ -43,6 +46,9 @@ const CommunityUserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Community",
     required: true
+  },
+  reference: {
+    type: String
   }
 });
 
