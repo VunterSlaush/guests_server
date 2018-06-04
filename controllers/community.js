@@ -129,8 +129,8 @@ async function requestAccess(
     reference
   );
   if (!communityUser) throw new ApiError("Residente no encontrado", 401);
+  const resident = await User.findOne({ _id: communityUser.user });
 
-  const resident = await User.find({ _id: communityUser.user });
   const visit = new Visit({
     community: communityId,
     resident: resident.id,
