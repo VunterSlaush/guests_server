@@ -8,7 +8,11 @@ const client = new OneSignal.Client({
 });
 
 async function send(receivers, type, data) {
-  var notification = new OneSignal.Notification({});
+  var notification = new OneSignal.Notification({
+    contents: {
+      en: "notification"
+    }
+  });
   notification.setParameter("data", { type, data });
   notification.setTargetDevices(receivers);
   await sendNotification(notification);
