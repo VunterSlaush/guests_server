@@ -141,7 +141,7 @@ async function requestAccess(
   });
   await visit.save();
   const photos = await uploadFiles(files);
-  await send(resident.devices, "UNEXPECTED VISIT", { visit });
+  await send(resident.devices, "UNEXPECTED VISIT", { visit, photos });
   console.log(
     "GUEST",
     guest,
@@ -152,7 +152,7 @@ async function requestAccess(
     "Paths",
     photos
   );
-  return true;
+  return { success: true };
 }
 
 async function uploadFiles(files) {
