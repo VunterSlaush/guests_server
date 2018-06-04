@@ -185,10 +185,13 @@ async function findCommunityUserByIdOrReference(
   const resident = await User.findOne({
     identification
   });
-  let communityUser = await CommunityUser.findOne({
-    community: communityId,
-    user: resident.id
-  });
+  let communityUser;
+  if (resident)
+    communityUser = await CommunityUser.findOne({
+      community: communityId,
+      user: resident.id
+    });
+
   if (!communityUser)
     communityUSer = await CommunityUser.findOne({
       community: communityId,
