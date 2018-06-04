@@ -143,7 +143,7 @@ async function requestAccess(
 
   const photos = await uploadFiles(files);
   await send(resident.devices, "UNEXPECTED VISIT", {
-    visit: { ...visit, guest: guest, resident: resident },
+    visit: { ...visit, guest: guest.toJSON(), resident: resident.toJSON() },
     photos
   });
   console.log(
@@ -185,17 +185,16 @@ async function findCommunityUserByIdOrReference(
   const resident = await User.findOne({
     identification
   });
-  if (resident) {
-    return await CommunityUser.findOne({
-      community: communityId,
-      user: resident.id
-    });
-  } else {
-    return await CommunityUser.findOne({
+  let communityUser = await CommunityUser.findOne({
+    community: communityId,
+    user: resident.id
+  });
+  if (!communityUser)
+    communityUSer = await CommunityUser.findOne({
       community: communityId,
       reference
     });
-  }
+  return communityUser;
 }
 
 module.exports = {
