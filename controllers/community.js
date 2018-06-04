@@ -158,7 +158,7 @@ async function requestAccess(
 async function uploadFiles(files) {
   const paths = [];
   for (const key in files) {
-    const path = await uploadFile(files[key]);
+    const path = await uploadFile("/storage", files[key]);
     paths.push(path);
   }
   return paths;
@@ -181,7 +181,6 @@ async function findCommunityUserByIdOrReference(
   const resident = await User.findOne({
     identification
   });
-  console.log("RESIDENT", resident);
   if (resident) {
     return await CommunityUser.findOne({
       community: communityId,
