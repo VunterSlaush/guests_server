@@ -32,6 +32,41 @@ router.post("/", handler(community.create, (req, res, next) => [req.body]));
 
 /**
  * @swagger
+ * /communities/{community}/requestAccess:
+ *   put:
+ *     description: solicitar acceso
+ *     tags:
+ *      - Community
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: body
+ *         description: Comunidad
+ *         in:  body
+ *         schema:
+ *           $ref: '#/definitions/Community'
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Comunidad Creada
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+router.post(
+  "/:community/requestAccess",
+  handler(community.requestAccess, (req, res, next) => [
+    req.params.community,
+    req.body,
+    req.files,
+    req.user
+  ])
+);
+
+/**
+ * @swagger
  * /communities/{community}:
  *   put:
  *     description: Crear una Comunidad

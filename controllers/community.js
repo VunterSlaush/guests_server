@@ -1,7 +1,8 @@
-const { Community, CommunityUser } = require("../models");
+const { Community, CommunityUser, User, Visit } = require("../models");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
-const { findIfUserIsGranted } = require("./utils");
+const { send } = require("../oneSignal");
+const { findIfUserIsGranted, findIfUserIsCommunitySecure } = require("./utils");
 
 // TODO SECURE THIS ROUTE!
 async function create({ name, address }) {
@@ -111,6 +112,81 @@ async function people(communityId, skip, limit) {
   }
 }
 
+async function requestAccess(
+  communityId,
+  { name, identification, residentIdentification, reference },
+  files,
+  user
+) {
+  await findIfUserIsCommunitySecure(communityId, user);
+  const guest = await User.findOneOrCreate(
+    { identification },
+    { identification, name }
+  );
+  const communityUser = await findCommunityUserByIdOrReference();
+  const resident = await User.find({ _id: communityUser.user });
+  const visit = new Visit({
+    community: communityId,
+    resident,
+    guest,
+    kind: "NOT EXPECTED",
+    creator: user
+  });
+  await visit.save();
+  const photos = await uploadFiles(files);
+  await send(resident.devices, "UNEXPECTED VISIT", { visit });
+  console.log(
+    "GUEST",
+    guest,
+    "CU",
+    communityUser,
+    "R",
+    resident,
+    "Paths",
+    photos
+  );
+  return true;
+}
+
+async function uploadFiles(files) {
+  const paths = [];
+  for (const key in files) {
+    const path = await uploadFile(files[key]);
+    paths.push(path);
+  }
+  return paths;
+}
+
+async function uploadFile(dir, file) {
+  return new Promise((resolve, reject) => {
+    file.mv(`${dir}/${file.name}`, err => {
+      if (err) reject(err);
+      resolve(`${dir}/${file.name}`);
+    });
+  });
+}
+
+async function findCommunityUserByIdOrReference(
+  communityId,
+  identification,
+  reference
+) {
+  const resident = await User.findOne({
+    identification
+  });
+  if (resident) {
+    return await CommunityUser.findOne({
+      community: communityId,
+      user: resident.id
+    });
+  } else {
+    return await CommunityUser.findOne({
+      community: communityId,
+      reference: reference
+    });
+  }
+}
+
 module.exports = {
   create,
   update,
@@ -119,5 +195,6 @@ module.exports = {
   details,
   userCommunities,
   securityCommunities,
-  people
+  people,
+  requestAccess
 };

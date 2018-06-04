@@ -71,6 +71,10 @@ const VisitSchema = new Schema(
     dayOfVisit: { type: Date, fake: "date.future" },
     companions: { type: Number, fake: "ramdon.number" },
     partOfDay: { type: String, enum: PART_OF_DAYS, default: "AFTERNOON" },
+    creator: {
+      type: Schema.Types.ObjectId,
+      refPath: "guestType"
+    },
     intervals: [Interval],
     kind: {
       type: String,
