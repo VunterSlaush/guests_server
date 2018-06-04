@@ -158,7 +158,7 @@ async function requestAccess(
 async function uploadFiles(files) {
   const paths = [];
   for (const key in files) {
-    const path = await uploadFile("/storage", files[key]);
+    const path = await uploadFile("storage", files[key]);
     paths.push(path);
   }
   return paths;
