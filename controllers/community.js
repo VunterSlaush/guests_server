@@ -140,8 +140,12 @@ async function requestAccess(
     timezone: resident.timezone
   });
   await visit.save();
+
   const photos = await uploadFiles(files);
-  await send(resident.devices, "UNEXPECTED VISIT", { visit, photos });
+  await send(resident.devices, "UNEXPECTED VISIT", {
+    visit: { ...visit, guest: guest, resident: resident },
+    photos
+  });
   console.log(
     "GUEST",
     guest,
