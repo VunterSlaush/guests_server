@@ -308,15 +308,15 @@ async function destroy(visit, user) {
 async function giveAccess(visitId, access, user) {
   const visit = await Visit.findOne({ _id: visitId, resident: user.id })
     .populate("guest")
+    .populate("creator")
     .populate("resident")
     .populate("community");
 
   if (!visit)
     throw new ApiError("No posee autorizacion para realizar esta accion", 401);
-  const creator = User.findOne({ _id: visit.creator });
-  console.log("GIVE ACCESS ", access, visit);
-  const push = await send(creator.devices, "VISIT ACCESS", {
-    visit: visit.toJSON(),
+  console.log("GIVE ACCESS ", visit);
+  const push = await send(visit.creator.devices, "VISIT ACCESS", {
+    visit,
     access
   });
   console.log("PUSH ", push);
