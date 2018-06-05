@@ -306,7 +306,7 @@ async function destroy(visit, user) {
 }
 
 async function giveAccess(visitId, access, user) {
-  const visit = Visit.findOne({ _id: visit, resident: user.id })
+  const visit = Visit.findOne({ _id: visitId, resident: user.id })
     .populate("guest")
     .populate("resident")
     .populate("community");
