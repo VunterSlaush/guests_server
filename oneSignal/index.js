@@ -15,7 +15,7 @@ async function send(receivers, type, data) {
   });
   notification.setParameter("data", { type, data });
   notification.setTargetDevices(receivers);
-  await sendNotification(notification);
+  return await sendNotification(notification);
 }
 
 async function sendNotification(notification) {
