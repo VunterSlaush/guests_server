@@ -299,14 +299,14 @@ async function findByResident(resident, timezone, kind, skip, limit) {
 }
 
 async function destroy(visit, user) {
-  const visitInstance = Visit.findOne({ _id: visit, resident: user });
+  const visitInstance = await Visit.findOne({ _id: visit, resident: user });
   if (!visitInstance)
     throw new ApiError("No posee autorizacion para realizar esta accion", 401);
   return await visitInstance.remove();
 }
 
 async function giveAccess(visitId, access, user) {
-  const visit = Visit.findOne({ _id: visitId, resident: user.id })
+  const visit = await Visit.findOne({ _id: visitId, resident: user.id })
     .populate("guest")
     .populate("resident")
     .populate("community");
