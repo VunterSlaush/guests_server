@@ -1,4 +1,5 @@
 const { Visit, Check, User, Community, Company } = require("../models");
+const { send } = require("../oneSignal");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
 const moment = require("moment-timezone");
@@ -298,9 +299,27 @@ async function findByResident(resident, timezone, kind, skip, limit) {
 }
 
 async function destroy(visit, user) {
-  const visitInstance = Visit.find({ _id: visit, resident: user });
-  if (!visitInstance) throw new ApiError("unauthorized", 401);
+  const visitInstance = Visit.findOne({ _id: visit, resident: user });
+  if (!visitInstance)
+    throw new ApiError("No posee autorizacion para realizar esta accion", 401);
   return await visitInstance.remove();
+}
+
+async function giveAccess(visitId, access, user) {
+  const visit = Visit.findOne({ _id: visit, resident: user.id })
+    .populate("guest")
+    .populate("resident")
+    .populate("community");
+
+  if (!visit)
+    throw new ApiError("No posee autorizacion para realizar esta accion", 401);
+  const creator = User.findOne({ _id: visit.creator });
+  console.log("GIVE ACCESS ", access, visit);
+  await send(creator.devices, "VISIT ACCESS", {
+    visit: visit.toJSON(),
+    access
+  });
+  return { success: true };
 }
 
 module.exports = {
@@ -309,5 +328,6 @@ module.exports = {
   check,
   destroy,
   guestIsScheduled,
-  findByResident
+  findByResident,
+  giveAccess
 };

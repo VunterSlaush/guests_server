@@ -150,16 +150,6 @@ async function requestAccess(
     },
     photos
   });
-  console.log(
-    "GUEST",
-    guest,
-    "CU",
-    communityUser,
-    "R",
-    resident,
-    "Paths",
-    photos
-  );
   return { success: true };
 }
 
