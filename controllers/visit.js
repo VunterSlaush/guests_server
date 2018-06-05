@@ -315,10 +315,11 @@ async function giveAccess(visitId, access, user) {
     throw new ApiError("No posee autorizacion para realizar esta accion", 401);
   const creator = User.findOne({ _id: visit.creator });
   console.log("GIVE ACCESS ", access, visit);
-  await send(creator.devices, "VISIT ACCESS", {
+  const push = await send(creator.devices, "VISIT ACCESS", {
     visit: visit.toJSON(),
     access
   });
+  console.log("PUSH ", push);
   return { success: true };
 }
 
