@@ -12,7 +12,7 @@ module.exports = new LocalStrategy(
 
 async function authenticate(email, password, done) {
   let user = await User.findOne({ email: email });
-  if (!user.password) return done(null, false);
-  if (!user || !user.validPassword(password)) return done(null, false);
+  if (!user || !user.password || !user.validPassword(password))
+    return done(null, false);
   return done(null, user);
 }

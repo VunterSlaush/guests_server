@@ -16,7 +16,10 @@ const auth = require("./auth");
 const fs = require("fs");
 const https = require("https");
 
-mongoose.connect(mongoDB, {});
+mongoose.connect(
+  mongoDB,
+  {}
+);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
@@ -50,8 +53,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+  res.status(err.status || 500).json({});
 });
 
 const port = process.env.PORT || 3000;
