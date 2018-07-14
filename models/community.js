@@ -17,6 +17,8 @@ const Promise = require("bluebird");
  *         readOnly: true
  *       name:
  *         type: string
+ *       image:
+ *         type: string
  *       address:
  *         $ref: '#/definitions/Address'
  */
@@ -31,6 +33,7 @@ const CommunitySchema = new Schema(
       es_indexed: true,
       es_type: "text"
     },
+    image: { type: String, fake: "internet.avatar" },
     address: Address
   },
   {
