@@ -91,7 +91,8 @@ const VisitSchema = new Schema(
     timezone: {
       type: String,
       required: true
-    }
+    },
+    images: [String]
   },
   {
     timestamps: { createdAt: "created_at" },

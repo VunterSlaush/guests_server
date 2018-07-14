@@ -129,19 +129,21 @@ async function requestAccess(
     reference
   );
   if (!communityUser) throw new ApiError("Residente no encontrado", 401);
-  const resident = await User.findOne({ _id: communityUser.user });
 
+  const resident = await User.findOne({ _id: communityUser.user });
+  const photos = await uploadFiles(files);
   const visit = new Visit({
     community: communityId,
     resident: resident.id,
     guest: guest.id,
     kind: "NOT EXPECTED",
     creator: user.id,
-    timezone: resident.timezone
+    timezone: resident.timezone,
+    images: photos
   });
+
   await visit.save();
 
-  const photos = await uploadFiles(files);
   await send(resident.devices, "UNEXPECTED VISIT", {
     visit: {
       ...visit.toJSON(),

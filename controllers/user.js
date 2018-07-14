@@ -9,7 +9,7 @@ async function auth(user) {
     var token = generateAuthToken(user);
     return { token: token, user: user };
   }
-  throw new ApiError("Usuario no encontrado", 404);
+  throw new ApiError("Parametros de Ingreso Incorrectos", 404);
 }
 
 async function create(info, image) {

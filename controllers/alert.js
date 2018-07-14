@@ -54,7 +54,7 @@ async function sendAlert(alert) {
     .reduce((prev, act) => {
       return prev.concat(act.user.devices ? act.user.devices : []);
     }, []);
-  await OneSignal.send(receivers, "alert", alert);
+  await OneSignal.send(receivers, "ALERT", alert);
 }
 
 module.exports = {
