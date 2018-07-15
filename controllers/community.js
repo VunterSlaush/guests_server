@@ -23,13 +23,8 @@ async function update(id, communityInfo, user) {
   return community;
 }
 
-async function find(query, skip, limit) {
-  let communities = await Community.find({
-    $or: [{ name: { $regex: query, $options: "i" } }]
-  })
-    .limit(limit)
-    .skip(skip);
-  return communities;
+async function all() {
+  return await Community.find({});
 }
 
 async function destroy(id, user) {
@@ -198,7 +193,7 @@ async function findCommunityUserByIdOrReference(
 module.exports = {
   create,
   update,
-  find,
+  all,
   destroy,
   details,
   userCommunities,

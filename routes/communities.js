@@ -32,6 +32,23 @@ router.post("/", handler(community.create, (req, res, next) => [req.body]));
 
 /**
  * @swagger
+ * /communities:
+ *   get:
+ *     description: conseguir todas las comunidades
+ *     tags:
+ *      - Community
+ *     produces:
+ *      - application/json
+ *     responses:
+ *       200:
+ *         description: Lista de Comunidades
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+router.get("/", handler(community.all, (req, res, next) => []));
+
+/**
+ * @swagger
  * /communities/{community}/requestAccess:
  *   put:
  *     description: solicitar acceso
@@ -190,6 +207,9 @@ router.post(
  *             user:
  *               description: user id del usuario residente
  *               type: string
+ *             reference:
+ *               description: referencia de la vivienda el usuario numero de casa/apto/oficina
+ *               type: string
  *     responses:
  *       200:
  *         description: Comunidad Creada
@@ -271,7 +291,7 @@ router.post(
  *       200:
  *         description: Registro Eliminado
  */
-router.post(
+router.delete(
   "/:comunityUser",
   handler(communityUser.destroy, (req, res, next) => [
     req.params.comunityUser,
