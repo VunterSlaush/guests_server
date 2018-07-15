@@ -2,6 +2,7 @@ const community = require("../controllers/community");
 const visit = require("../controllers/visit");
 const communityUser = require("../controllers/communityUser");
 const express = require("express");
+const webhook = require("../controllers/webhook");
 const router = express.Router();
 const handler = require("../utils/ControllerHandler");
 const auth = require("../auth");
@@ -265,6 +266,157 @@ router.post(
     req.body.reference,
     "ADMINISTRATOR",
     req.user
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/webhooks:
+ *   get:
+ *     description: Conseguir los webhooks de la comunidad
+ *     tags:
+ *      - Community
+ *      - Webhook
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de Webhooks
+ *         schema:
+ *             $ref: '#/definitions/Webhook'
+ */
+router.get(
+  "/:comunity/webhooks",
+  handler(webhook.communityWebhooks, (req, res, next) => [
+    req.params.comunity,
+    req.user.id
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/webhooks:
+ *   post:
+ *     description: crear webhook
+ *     tags:
+ *      - Community
+ *      - Webhook
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: body
+ *         description: Webhook
+ *         in:  body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             eventType:
+ *               description: Tipo del Webhook
+ *               type: string
+ *             endpoint:
+ *               description: url del Webhook
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Webhook creado
+ *         schema:
+ *             $ref: '#/definitions/Webhook'
+ */
+router.post(
+  "/:comunity/webhooks",
+  handler(webhook.create, (req, res, next) => [
+    req.params.comunity,
+    req.body.eventType,
+    req.body.endpoint,
+    req.user.id
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/webhooks/{webhook}:
+ *   put:
+ *     description: Modificar Webhook
+ *     tags:
+ *      - Community
+ *      - Webhook
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: webhook
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: body
+ *         description: Webhook
+ *         in:  body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             eventType:
+ *               description: Tipo del Webhook
+ *               type: string
+ *             endpoint:
+ *               description: url del Webhook
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Webhook modificado
+ *         schema:
+ *             $ref: '#/definitions/Webhook'
+ */
+router.put(
+  "/:comunity/webhooks/:webhook",
+  handler(webhook.update, (req, res, next) => [
+    req.params.comunity,
+    req.params.webhook,
+    req.body,
+    req.user.id
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/webhooks/{webhook}:
+ *   delete:
+ *     description: Eliminar Webhook
+ *     tags:
+ *      - Community
+ *      - Webhook
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: webhook
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Webhook eliminado satisfactoriamente
+ */
+router.delete(
+  "/:comunity/webhooks/:webhook",
+  handler(webhook.destroy, (req, res, next) => [
+    req.params.comunity,
+    req.params.webhook,
+    req.user.id
   ])
 );
 

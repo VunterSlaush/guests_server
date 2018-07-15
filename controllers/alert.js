@@ -12,7 +12,6 @@ async function create(info, author) {
     await sendAlert(alert);
     return alert;
   } catch (e) {
-    console.log("E", e);
     throw new ApiError("Error en los datos ingresados", 400);
   }
 }
