@@ -1,5 +1,6 @@
 const { Webhook } = require("../models");
 const { findIfUserIsGranted } = require("./utils");
+const axios = require("axios");
 
 async function create(community, eventType, endpoint, userId) {
   await findIfUserIsGranted(community, userId);
@@ -29,9 +30,20 @@ async function communityWebHooks(community, userId) {
   return { webhooks };
 }
 
+async function run(community, eventType, data) {
+  const webhooks = await Webhook.find({ community, eventType });
+  const requests = webhooks.map(webhook => toRequest(webhook, data));
+  if (requests.length > 0) await axios.all(requests);
+}
+
+function toRequest(webhook, data) {
+  return axios.post(webhook.endpoint, data);
+}
+
 module.exports = {
   create,
   update,
   destroy,
-  communityWebHooks
+  communityWebHooks,
+  run
 };

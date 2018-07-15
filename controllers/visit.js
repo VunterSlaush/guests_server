@@ -3,6 +3,7 @@ const { send } = require("../oneSignal");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
 const moment = require("moment-timezone");
+const Webhook = require("./webhook");
 const {
   findIfUserIsOnCommunity,
   findIfUserIsCommunitySecure
@@ -44,9 +45,9 @@ async function create({
 
     await visit.save();
     await populateVisit(visit);
+    await Webhook.run(community, "ON_NEW_VISIT", visit);
     return visit;
   } catch (e) {
-    console.log("E", e);
     throw new ApiError("Error en los datos ingresados", 400);
   }
 }
@@ -80,8 +81,14 @@ async function update(visitId, info, user) {
 
 async function check(visit, type) {
   const check = new Check({ visit, type });
+  if (type == "IN") await runAccessWebhooks(visit);
   await check.save();
   return check;
+}
+
+async function runAccessWebhooks(visit) {
+  const visit = await Visit.findOne({ _id: visitId, resident: user.id });
+  await Webhook.run(visit.community, "ON_ACCESS", visit);
 }
 
 async function guestIsScheduled(
@@ -101,6 +108,7 @@ async function guestIsScheduled(
   }).sort({
     created_at: -1
   });
+
   const visits = await Promise.all(visit.map(item => evaluateVisit(item)));
 
   const visitsFiltered = visits.filter(item => item != null);
@@ -110,12 +118,10 @@ async function guestIsScheduled(
       ? await fillVisit(visitsFiltered[0])
       : { error: "Visita no Encontrada" };
 
-  //console.log("VISIT ", visitFounded);
   return visitFounded;
 }
 
 async function fillVisit(visit) {
-  console.log("FILLING WITH", visit);
   return await Visit.findOne({ _id: visit.id })
     .populate("guest")
     .populate("resident")
@@ -133,13 +139,10 @@ async function evaluateVisit(visit) {
   switch (visit.kind) {
     case "SCHEDULED":
       return evaluateScheduled(visit) && check == null ? visit : null;
-      break;
     case "FREQUENT":
       return evaluateFrequent(visit) ? visit : null;
-      break;
     case "SPORADIC":
       return check == null;
-      break;
     default:
   }
 }
@@ -314,12 +317,11 @@ async function giveAccess(visitId, access, user) {
 
   if (!visit)
     throw new ApiError("No posee autorizacion para realizar esta accion", 401);
-  console.log("GIVE ACCESS ", visit);
   const push = await send(visit.creator.devices, "VISIT ACCESS", {
     visit,
     access
   });
-  console.log("PUSH ", push);
+  if (access) await check(visit.id, "IN");
   return { success: true };
 }
 
