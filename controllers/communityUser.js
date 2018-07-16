@@ -2,6 +2,7 @@ const { Community, CommunityUser, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 const { findIfUserIsGranted } = require("./utils");
 const Webhook = require("./webhook");
+
 async function create(community, userToAdd, kind, reference, user) {
   try {
     await findIfUserIsGranted(community, user);
@@ -13,6 +14,24 @@ async function create(community, userToAdd, kind, reference, user) {
     });
     await communityUser.save();
     if (kind === "RESIDENT") await runOnUserWebhook(community, userToAdd);
+    return communityUser;
+  } catch (e) {
+    if (e.status == 401) throw e;
+    throw new ApiError("Error en los datos ingresados", 400);
+  }
+}
+
+async function join(community, user, reference) {
+  try {
+    let communityUser = new CommunityUser({
+      community,
+      user,
+      kind: "RESIDENT",
+      reference,
+      status: "PENDING"
+    });
+    await communityUser.save();
+    await runOnUserWebhook(community, userToAdd);
     return communityUser;
   } catch (e) {
     if (e.status == 401) throw e;
@@ -34,5 +53,6 @@ async function destroy(id, user) {
 
 module.exports = {
   create,
-  destroy
+  destroy,
+  join
 };

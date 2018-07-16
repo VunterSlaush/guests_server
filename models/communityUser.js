@@ -33,7 +33,7 @@ const Post = require;
  */
 
 const KINDS = ["SECURITY", "RESIDENT", "ADMINISTRATOR"];
-
+const STATUSES = ["PENDING", "APPROVED"];
 const CommunityUserSchema = new Schema({
   kind: {
     type: String,
@@ -47,6 +47,7 @@ const CommunityUserSchema = new Schema({
     ref: "Community",
     required: true
   },
+  status: { type: String, enum: STATUSES, default: "PENDING" },
   reference: {
     type: String
   }

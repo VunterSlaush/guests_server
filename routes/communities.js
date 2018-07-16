@@ -183,6 +183,45 @@ router.delete(
 
 /**
  * @swagger
+ * /communities/{community}/join:
+ *   post:
+ *     description: pedir acceso a una comunidad
+ *     tags:
+ *      - Community
+ *      - CommunityUser
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: body
+ *         description: Comunidad
+ *         in:  body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             reference:
+ *               description: Referencia Nro casa, apto, oficina etc
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Comunidad Creada
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+router.post(
+  "/:comunity/join",
+  handler(communityUser.join, (req, res, next) => [
+    req.params.comunity,
+    req.user,
+    req.body.reference
+  ])
+);
+
+/**
+ * @swagger
  * /communities/{community}/security:
  *   post:
  *     description: A;adir personal de Vigilancia
