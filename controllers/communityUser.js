@@ -31,9 +31,10 @@ async function join(community, user, reference) {
       status: "PENDING"
     });
     await communityUser.save();
-    await runOnUserWebhook(community, userToAdd);
+    await runOnUserWebhook(community, user);
     return communityUser;
   } catch (e) {
+    console.log("E", e);
     if (e.status == 401) throw e;
     throw new ApiError("Error en los datos ingresados", 400);
   }

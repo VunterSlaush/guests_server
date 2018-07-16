@@ -91,7 +91,8 @@ async function securityCommunities(user) {
     {
       $match: {
         "community_users.user": mongoose.Types.ObjectId(user),
-        "community_users.kind": "SECURITY"
+        "community_users.kind": "SECURITY",
+        "community_users.status": "APPROVED"
       }
     }
   ]);

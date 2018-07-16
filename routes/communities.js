@@ -215,7 +215,7 @@ router.post(
   "/:comunity/join",
   handler(communityUser.join, (req, res, next) => [
     req.params.comunity,
-    req.user,
+    req.user.id,
     req.body.reference
   ])
 );
