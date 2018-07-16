@@ -5,10 +5,16 @@ const { send } = require("../oneSignal");
 const { findIfUserIsGranted, findIfUserIsCommunitySecure } = require("./utils");
 
 // TODO SECURE THIS ROUTE!
-async function create({ name, address }) {
+async function create(name, address, user) {
   try {
-    let community = new Community({ name, address });
+    const community = new Community({ name, address });
     await community.save();
+    const communityUser = new CommunityUser({
+      community: community.id,
+      user: user.id,
+      kind: "ADMINISTRATOR"
+    });
+    await communityUser.save();
     return community;
   } catch (e) {
     throw new ApiError("Error en los datos ingresados", 400);

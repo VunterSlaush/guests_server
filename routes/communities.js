@@ -29,7 +29,14 @@ router.use(auth.jwt());
  *         schema:
  *             $ref: '#/definitions/Community'
  */
-router.post("/", handler(community.create, (req, res, next) => [req.body]));
+router.post(
+  "/",
+  handler(community.create, (req, res, next) => [
+    re.body.name,
+    req.body.address,
+    req.user
+  ])
+);
 
 /**
  * @swagger
