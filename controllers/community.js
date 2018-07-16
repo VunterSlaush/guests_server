@@ -97,8 +97,7 @@ async function securityCommunities(user) {
   ]);
   const communities = communitiesRaw.map(item => {
     return {
-      name: item.name,
-      _id: item._id,
+      ...item,
       kind: item.community_users.kind
     };
   });
