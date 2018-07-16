@@ -52,6 +52,17 @@ const CommunityUserSchema = new Schema({
   }
 });
 
+CommunityUserSchema.statics.findOrCreate = async function findOneOrCreate(
+  condition,
+  params
+) {
+  const self = this;
+  let u = await self.findOne(condition);
+  if (!u) u = await self.create(params);
+  await u.save();
+  return u;
+};
+
 // this is to not repeat CommunityUsers on same posts, companies, jobs etc ..
 CommunityUserSchema.index({ user: 1, community: 1 }, { unique: true });
 module.exports = mongoose.model("CommunityUser", CommunityUserSchema);

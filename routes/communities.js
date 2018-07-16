@@ -88,6 +88,41 @@ router.post(
 
 /**
  * @swagger
+ * /communities/{community}/giveAccessBySecurity:
+ *   put:
+ *     description: flujo para cuando el usuario de seguridad de acceso
+ *     tags:
+ *      - Community
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: body
+ *         description: Comunidad
+ *         in:  body
+ *         schema:
+ *           $ref: '#/definitions/Community'
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Comunidad Creada
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+router.post(
+  "/:community/giveAccessBySecurity",
+  handler(community.giveAccessBySecurity, (req, res, next) => [
+    req.params.community,
+    req.body,
+    req.files,
+    req.user
+  ])
+);
+
+/**
+ * @swagger
  * /communities/{community}:
  *   put:
  *     description: Crear una Comunidad

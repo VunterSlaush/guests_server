@@ -1,4 +1,5 @@
 const { Community, CommunityUser, User, Visit } = require("../models");
+const VisitCtrllr = require("./visit");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
 const { send } = require("../oneSignal");
@@ -128,9 +129,15 @@ async function requestAccess(
     residentIdentification,
     reference
   );
-  if (!communityUser) throw new ApiError("Residente no encontrado", 401);
+  if (!communityUser) throw new ApiError("Residente no encontrado", 404);
 
-  const resident = await User.findOne({ _id: communityUser.user });
+  const resident = await User.findOne({
+    _id: communityUser.user,
+    "devices.0": { $exists: true }
+  });
+
+  if (!resident) throw new ApiError("Residente no encontrado", 404);
+
   const photos = await uploadFiles(files);
   const visit = new Visit({
     community: communityId,
@@ -152,6 +159,65 @@ async function requestAccess(
     },
     photos
   });
+  return { success: true };
+}
+
+async function giveAccessBySecurity(
+  communityId,
+  { name, identification, residentIdentification, reference },
+  files,
+  user
+) {
+  await findIfUserIsCommunitySecure(communityId, user);
+  console.log(
+    "PARAMS",
+    communityId,
+    name,
+    identification,
+    residentIdentification,
+    reference,
+    user.id
+  );
+  const guest = await User.findOneOrCreate(
+    { identification },
+    { identification, name, timezone: user.timezone }
+  );
+
+  const resident = await User.findOneOrCreate(
+    { identification: residentIdentification },
+    {
+      identification: residentIdentification,
+      name: "NO NAME",
+      timezone: user.timezone
+    }
+  );
+
+  const communityUser = await CommunityUser.findOrCreate(
+    {
+      community: communityId,
+      user: resident.id
+    },
+    {
+      community: communityId,
+      user: resident.id,
+      kind: "RESIDENT",
+      reference
+    }
+  );
+
+  const photos = await uploadFiles(files);
+  const visit = new Visit({
+    community: communityId,
+    resident: resident.id,
+    guest: guest.id,
+    kind: "NOT EXPECTED",
+    creator: user.id,
+    timezone: user.timezone,
+    images: photos
+  });
+
+  await visit.save();
+  await VisitCtrllr.check(visit.id, "IN");
   return { success: true };
 }
 
@@ -205,5 +271,6 @@ module.exports = {
   userCommunities,
   securityCommunities,
   people,
-  requestAccess
+  requestAccess,
+  giveAccessBySecurity
 };

@@ -12,7 +12,7 @@ const controllerHandler = (promise, params) => async (req, res, next) => {
     return res.json(result || { message: "OK" });
   } catch (error) {
     console.log("Error", error);
-    if (error.status) return res.status(error.status).json({ error: error });
+    if (error.status) return res.status(error.status).json(error);
     else res.status(500).json({ error: "Error en el servidor" });
   }
 };

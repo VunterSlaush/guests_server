@@ -86,8 +86,8 @@ async function check(visit, type) {
   return check;
 }
 
-async function runAccessWebhooks(visit) {
-  const visit = await Visit.findOne({ _id: visitId, resident: user.id });
+async function runAccessWebhooks(visitId) {
+  const visit = await Visit.findOne({ _id: visitId });
   await Webhook.run(visit.community, "ON_ACCESS", visit);
 }
 

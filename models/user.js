@@ -48,8 +48,7 @@ const UserSchema = new Schema(
       validate: [validateNoNumbers, "names cannot have numbers"],
       maxlength: 100,
       fake: "name.findName",
-      es_indexed: true,
-      es_type: "text"
+      es_indexed: true
     },
     code: {
       type: Number
