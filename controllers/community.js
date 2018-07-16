@@ -5,9 +5,9 @@ const { send } = require("../oneSignal");
 const { findIfUserIsGranted, findIfUserIsCommunitySecure } = require("./utils");
 
 // TODO SECURE THIS ROUTE!
-async function create(name, address, user) {
+async function create(info, user) {
   try {
-    const community = new Community({ name, address });
+    const community = new Community(info);
     await community.save();
     const communityUser = new CommunityUser({
       community: community.id,

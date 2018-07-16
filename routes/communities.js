@@ -31,11 +31,7 @@ router.use(auth.jwt());
  */
 router.post(
   "/",
-  handler(community.create, (req, res, next) => [
-    re.body.name,
-    req.body.address,
-    req.user
-  ])
+  handler(community.create, (req, res, next) => [req.body, req.user])
 );
 
 /**
