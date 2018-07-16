@@ -14,7 +14,11 @@ async function auth(user) {
 
 async function create(info, image) {
   try {
-    let user = new User(info);
+    let user = await User.findOne({ identification: info.identification });
+    if (!user) user = new User();
+    if (!user.password || user.password == "") user.set(info);
+    else throw new ApiError("La cedula o el correo esta repetido", 409);
+
     if (image) {
       let imageUrl = await uploadImage(user, image);
       user.image = imageUrl;
@@ -65,7 +69,6 @@ async function update(id, user, image) {
 
 async function forgotPassword(email) {
   const user = await User.findOne({ email: email });
-  console.log("USER GETTED", user);
   if (!user) throw new ApiError("Usuario no encontrado", 404);
 
   const code = Math.floor(Math.random() * Math.pow(10, 6));
