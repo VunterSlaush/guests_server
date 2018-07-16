@@ -70,7 +70,8 @@ async function userCommunities(user) {
   const communities = communitiesRaw.map(item => {
     return {
       ...item,
-      kind: item.community_users.kind
+      kind: item.community_users.kind,
+      status: item.community_users.status
     };
   });
   return { communities };
@@ -100,7 +101,8 @@ async function securityCommunities(user) {
   const communities = communitiesRaw.map(item => {
     return {
       ...item,
-      kind: item.community_users.kind
+      kind: item.community_users.kind,
+      status: item.community_users.status
     };
   });
   return { communities };
