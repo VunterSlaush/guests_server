@@ -10,7 +10,8 @@ async function create(community, userToAdd, kind, reference, user) {
       community,
       userToAdd,
       kind,
-      reference
+      reference,
+      status: "APPROVED"
     });
     await communityUser.save();
     if (kind === "RESIDENT") await runOnUserWebhook(community, userToAdd);

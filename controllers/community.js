@@ -13,7 +13,8 @@ async function create(info, user) {
     const communityUser = new CommunityUser({
       community: community.id,
       user: user.id,
-      kind: "ADMINISTRATOR"
+      kind: "ADMINISTRATOR",
+      status: "APPROVED"
     });
     await communityUser.save();
     return community;
