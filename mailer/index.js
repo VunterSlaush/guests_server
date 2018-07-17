@@ -2,8 +2,7 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
   host: "smtp.zoho.com", // hostname
-  secureConnection: false, // TLS requires secureConnection to be false
-  secure: false,
+  secure: true,
   port: 465, // port for secure SMTP
   tls: {
     ciphers: "SSLv3"
