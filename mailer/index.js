@@ -1,23 +1,23 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.office365.com", // hostname
+  host: "smtp.zoho.com", // hostname
   secureConnection: false, // TLS requires secureConnection to be false
   secure: false,
-  port: 587, // port for secure SMTP
+  port: 465, // port for secure SMTP
   tls: {
     ciphers: "SSLv3"
   },
   auth: {
-    user: "visit_me_app@hotmail.com",
-    pass: "Visitme123"
+    user: "jgil@cupofcodeteam.com",
+    pass: "Jonixxla5"
   }
 });
 
 async function simpleMail(str, subject, receiver) {
   console.log("Trying Send", str, subject, receiver);
   const mailOptions = {
-    from: "visit_me_app@hotmail.com", // sender address
+    from: "jgil@cupofcodeteam.com", // sender address
     to: receiver, // list of receivers
     subject, // Subject line
     text: str

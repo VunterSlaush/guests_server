@@ -31,7 +31,11 @@ router.use(auth.jwt());
  */
 router.post(
   "/",
-  handler(community.create, (req, res, next) => [req.body, req.user])
+  handler(community.create, (req, res, next) => [
+    req.body,
+    !req.files ? null : req.files.image,
+    req.user
+  ])
 );
 
 /**
