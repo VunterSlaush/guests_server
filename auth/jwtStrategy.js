@@ -14,7 +14,10 @@ async function authenticate(userInfo, next) {
 module.exports = new Strategy(
   {
     secretOrKey: "Mota Rules",
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+    jwtFromRequest: ExtractJwt.fromExtractors([
+      ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ExtractJwt.fromAuthHeaderWithScheme("OAuth")
+    ])
   },
   authenticate
 );

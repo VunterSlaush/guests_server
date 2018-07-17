@@ -8,9 +8,11 @@ const { findIfUserIsGranted, findIfUserIsCommunitySecure } = require("./utils");
 // TODO SECURE THIS ROUTE!
 async function create(info, image, user) {
   try {
+    if (typeof info.address === "string")
+      info.address = JSON.parse(info.address);
     const community = new Community(info);
     if (image) {
-      const imageUrl = await uploadImage("storage", image);
+      const imageUrl = await uploadFile("storage", image);
       community.image = imageUrl;
     }
 
@@ -24,6 +26,7 @@ async function create(info, image, user) {
     await communityUser.save();
     return community;
   } catch (e) {
+    console.log("E!", e);
     throw new ApiError("Error en los datos ingresados", 400);
   }
 }
