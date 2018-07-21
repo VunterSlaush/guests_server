@@ -26,7 +26,6 @@ async function create(info, image, user) {
     await communityUser.save();
     return community;
   } catch (e) {
-    console.log("E!", e);
     throw new ApiError("Error en los datos ingresados", 400);
   }
 }
@@ -273,10 +272,35 @@ async function findCommunityUserByIdOrReference(
   return communityUser;
 }
 
+async function residents(community, user) {
+  return await peopleByKind(community, user, "RESIDENT");
+}
+
+async function security(community, user) {
+  return await peopleByKind(community, user, "SECURITY");
+}
+
+async function admins(community, user) {
+  return await peopleByKind(community, user, "ADMINISTRATOR");
+}
+
+async function peopleByKind(community, user, kind) {
+  console.log("PARAMS", community, user, kind);
+  await findIfUserIsGranted(community, user);
+  try {
+    return await CommunityUser.find({ community, kind }).populate("user");
+  } catch (e) {
+    throw new ApiError("Comunidad no Encontrada", 404);
+  }
+}
+
 module.exports = {
   create,
   update,
   all,
+  residents,
+  security,
+  admins,
   destroy,
   details,
   userCommunities,

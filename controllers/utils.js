@@ -2,11 +2,12 @@ const { Post, User, CommunityUser } = require("../models");
 const ApiError = require("../utils/ApiError");
 
 async function findIfUserIsGranted(communityId, user) {
+  console.log("+ PARAMS", communityId, user);
   let community;
   try {
     community = await CommunityUser.findOne({
       user,
-      communityId,
+      community: communityId,
       kind: "ADMINISTRATOR"
     });
   } catch (e) {

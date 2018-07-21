@@ -569,4 +569,85 @@ router.post(
   ])
 );
 
+/**
+ * @swagger
+ * /communities/{community}/residents:
+ *   get:
+ *     description: Conseguir los residentes de la comunidad
+ *     tags:
+ *      - Community
+
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de Residentes y su Estatus
+ */
+router.get(
+  "/:community/residents",
+  handler(community.residents, (req, res, next) => [
+    req.params.community,
+    req.user.id
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/admins:
+ *   get:
+ *     description: Conseguir los Administradores de la comunidad
+ *     tags:
+ *      - Community
+
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de Administradores y su Estatus
+ */
+router.get(
+  "/:community/admins",
+  handler(community.admins, (req, res, next) => [
+    req.params.community,
+    req.user.id
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/{community}/security:
+ *   get:
+ *     description: Conseguir los Vigilates de la comunidad
+ *     tags:
+ *      - Community
+
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de Vigilates y su Estatus
+ */
+router.get(
+  "/:community/security",
+  handler(community.security, (req, res, next) => [
+    req.params.community,
+    req.user.id
+  ])
+);
+
 module.exports = router;
