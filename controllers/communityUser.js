@@ -3,12 +3,12 @@ const ApiError = require("../utils/ApiError");
 const { findIfUserIsGranted } = require("./utils");
 const Webhook = require("./webhook");
 
-async function create(community, userToAdd, kind, reference, user) {
+async function create(community, userToAdd, reference, kind, user) {
+  // await findIfUserIsGranted(community, user);
   try {
-    await findIfUserIsGranted(community, user);
     let communityUser = new CommunityUser({
       community,
-      userToAdd,
+      user: userToAdd,
       kind,
       reference,
       status: "APPROVED"
@@ -17,7 +17,7 @@ async function create(community, userToAdd, kind, reference, user) {
     if (kind === "RESIDENT") await runOnUserWebhook(community, userToAdd);
     return communityUser;
   } catch (e) {
-    if (e.status == 401) throw e;
+    console.log("EEE", e);
     throw new ApiError("Error en los datos ingresados", 400);
   }
 }

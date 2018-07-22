@@ -260,7 +260,7 @@ router.post(
   handler(communityUser.create, (req, res, next) => [
     req.params.comunity,
     req.body.user,
-    null,
+    req.body.reference,
     "SECURITY",
     req.user
   ])
