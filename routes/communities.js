@@ -6,6 +6,7 @@ const webhook = require("../controllers/webhook");
 const router = express.Router();
 const handler = require("../utils/ControllerHandler");
 const auth = require("../auth");
+const stats = require("../controllers/stats");
 router.use(auth.jwt());
 
 /**
@@ -679,6 +680,102 @@ router.get(
   handler(community.security, (req, res, next) => [
     req.params.community,
     req.user.id
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/stats/{community}/visitsByType:
+ *   get:
+ *     description: Estadisticas de visitas
+ *     tags:
+ *      - Community
+ *      - Visit
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: month
+ *         in:  query
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Cantidad de visitas por tipo en un mes para cierta comunidad
+ */
+router.get(
+  "/stats/:community/visitsByType",
+  handler(stats.visitsTypeCountByMonth, (req, res, next) => [
+    req.params.community,
+    req.query.month,
+    req.user
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/stats/{community}/allVisitsByMonth:
+ *   get:
+ *     description: Estadisticas de visitas
+ *     tags:
+ *      - Community
+ *      - Visit
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: month
+ *         in:  query
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Cantidad de visitas por tipo en un mes para cierta comunidad
+ */
+router.get(
+  "/stats/:community/allVisitsByMonth",
+  handler(stats.visitCountByMonth, (req, res, next) => [
+    req.params.community,
+    req.query.month,
+    req.user
+  ])
+);
+
+/**
+ * @swagger
+ * /communities/stats/{community}/visitByPartOfDay:
+ *   get:
+ *     description: Estadisticas de visitas
+ *     tags:
+ *      - Community
+ *      - Visit
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: month
+ *         in:  query
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Cantidad de visitas por tipo en un mes para cierta comunidad
+ */
+router.get(
+  "/stats/:community/visitByPartOfDay",
+  handler(stats.countByPartOfDay, (req, res, next) => [
+    req.params.community,
+    req.query.month,
+    req.user
   ])
 );
 

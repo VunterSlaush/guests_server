@@ -69,7 +69,6 @@ const VisitSchema = new Schema(
       required: true
     },
     dayOfVisit: { type: Date, fake: "date.future" },
-    companions: { type: Number, fake: "ramdon.number" },
     partOfDay: { type: String, enum: PART_OF_DAYS, default: "AFTERNOON" },
     creator: {
       type: Schema.Types.ObjectId,
@@ -90,7 +89,8 @@ const VisitSchema = new Schema(
     },
     timezone: {
       type: String,
-      required: true
+      required: true,
+      default: "America/Bogota"
     },
     images: [String]
   },

@@ -112,7 +112,7 @@ async function find(query, page) {
       { email: { $regex: query, $options: "i" } }
     ]
   })
-    .skip(page * 30)
+    .skip((page - 1) * 30)
     .limit(30);
   return { results, pagination: { more: results.length === 30 } };
 }

@@ -179,15 +179,7 @@ async function giveAccessBySecurity(
   user
 ) {
   await findIfUserIsCommunitySecure(communityId, user);
-  console.log(
-    "PARAMS",
-    communityId,
-    name,
-    identification,
-    residentIdentification,
-    reference,
-    user.id
-  );
+
   const guest = await User.findOneOrCreate(
     { identification },
     { identification, name, timezone: user.timezone }

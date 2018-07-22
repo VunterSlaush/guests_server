@@ -39,6 +39,7 @@ const CheckSchema = new Schema(
   },
   {
     timestamps: { createdAt: "created_at" },
+    fakeCreatedAt: { from: "01-01-2018", to: "12-31-2018" },
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
   }
