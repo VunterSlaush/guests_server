@@ -181,6 +181,11 @@ secureRouter.put(
  *         in:  query
  *         schema:
  *           type: string
+ *       - name: page
+ *         description: name, email, or id
+ *         in:  query
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: a list of 30 users max
@@ -189,7 +194,7 @@ secureRouter.put(
  */
 secureRouter.get(
   "/",
-  handler(user.find, (req, res, next) => [req.query.query])
+  handler(user.find, (req, res, next) => [req.query.query, req.query.page])
 );
 
 /**

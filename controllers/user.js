@@ -104,14 +104,16 @@ async function findFirstIdentificationMatch(identification) {
   });
 }
 
-async function find(query) {
+async function find(query, page) {
   return await User.find({
     $or: [
       { name: { $regex: query, $options: "i" } },
       { identification: { $regex: query, $options: "i" } },
       { email: { $regex: query, $options: "i" } }
     ]
-  }).limit(30);
+  })
+    .skip(page * 30)
+    .limit(30);
 }
 
 module.exports = {
