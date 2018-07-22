@@ -42,8 +42,11 @@ async function join(community, user, reference) {
 }
 
 async function runOnUserWebhook(community, userToAdd) {
-  const user = await User.findOne({ _id: userToAdd });
-  await Webhook.run(community, "ON_NEW_RESIDENT", user);
+  // TODO TEST
+  try {
+    const user = await User.findOne({ _id: userToAdd });
+    await Webhook.run(community, "ON_NEW_RESIDENT", user);
+  } catch (error) {}
 }
 
 async function destroy(id, user) {
