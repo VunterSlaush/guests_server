@@ -104,12 +104,23 @@ async function findFirstIdentificationMatch(identification) {
   });
 }
 
+async function find(query) {
+  return await User.find({
+    $or: [
+      { name: { $regex: query, $options: "i" } },
+      { identification: { $regex: query, $options: "i" } },
+      { email: { $regex: query, $options: "i" } }
+    ]
+  }).limit(30);
+}
+
 module.exports = {
   auth,
   create,
   update,
   profile,
   addDevice,
+  find,
   findFirstIdentificationMatch,
   removeDevice,
   forgotPassword,

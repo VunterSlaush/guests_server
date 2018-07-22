@@ -168,6 +168,32 @@ secureRouter.put(
 
 /**
  * @swagger
+ * /user:
+ *   get:
+ *     description: find users!
+ *     tags:
+ *      - User
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: query
+ *         description: name, email, or id
+ *         in:  query
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: a list of 30 users max
+ *         schema:
+ *             $ref: '#/definitions/User'
+ */
+secureRouter.get(
+  "/",
+  handler(user.find, (req, res, next) => [req.query.query])
+);
+
+/**
+ * @swagger
  * /user/me/visits/{type}:
  *   get:
  *     description: Lista de visitas
