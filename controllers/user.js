@@ -105,7 +105,7 @@ async function findFirstIdentificationMatch(identification) {
 }
 
 async function find(query, page) {
-  return await User.find({
+  const results = await User.find({
     $or: [
       { name: { $regex: query, $options: "i" } },
       { identification: { $regex: query, $options: "i" } },
@@ -114,6 +114,7 @@ async function find(query, page) {
   })
     .skip(page * 30)
     .limit(30);
+  return { results, pagination: { more: results.length === 30 } };
 }
 
 module.exports = {
