@@ -352,6 +352,38 @@ router.post(
 
 /**
  * @swagger
+ * /communities/{community}/approve/{user}:
+ *   post:
+ *     description: aprobar a un residente
+ *     tags:
+ *      - Community
+ *      - User
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *       - name: user
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Usuario Aprobado
+ */
+router.put(
+  "/:community/approve/:user",
+  handler(community.approve, (req, res, next) => [
+    req.params.community,
+    req.params.user,
+    req.user
+  ])
+);
+
+/**
+ * @swagger
  * /communities/{community}/webhooks:
  *   get:
  *     description: Conseguir los webhooks de la comunidad
@@ -503,7 +535,7 @@ router.delete(
 
 /**
  * @swagger
- * /communities/{comunityUser}:
+ * /communities/communityUser/{comunityUser}:
  *   delete:
  *     description: remover administrador, residente, o personal de seguridad
  *     tags:
@@ -525,10 +557,10 @@ router.delete(
  *         description: Registro Eliminado
  */
 router.delete(
-  "/:comunityUser",
+  "/communityUser/:communityUser",
   handler(communityUser.destroy, (req, res, next) => [
-    req.params.comunityUser,
-    req.user
+    req.params.communityUser,
+    req.user.id
   ])
 );
 

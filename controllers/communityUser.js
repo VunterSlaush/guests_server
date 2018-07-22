@@ -47,7 +47,7 @@ async function runOnUserWebhook(community, userToAdd) {
 }
 
 async function destroy(id, user) {
-  let community = await CommunityUser.findOne({ _id: id, user: user._id });
+  let community = await CommunityUser.findOne({ _id: id });
   await findIfUserIsGranted(community.community, user);
   await community.remove();
   return true;

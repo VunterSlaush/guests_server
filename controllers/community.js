@@ -285,10 +285,24 @@ async function admins(community, user) {
 }
 
 async function peopleByKind(community, user, kind) {
-  console.log("PARAMS", community, user, kind);
   await findIfUserIsGranted(community, user);
   try {
     return await CommunityUser.find({ community, kind }).populate("user");
+  } catch (e) {
+    throw new ApiError("Comunidad no Encontrada", 404);
+  }
+}
+
+async function approve(community, userToApprove, user) {
+  await findIfUserIsGranted(community, user);
+  try {
+    const communityUser = await CommunityUser.findOne({
+      community,
+      user: userToApprove
+    });
+    communityUser.status = "APPROVED";
+    await communityUser.save();
+    return true;
   } catch (e) {
     throw new ApiError("Comunidad no Encontrada", 404);
   }
@@ -307,5 +321,6 @@ module.exports = {
   securityCommunities,
   people,
   requestAccess,
+  approve,
   giveAccessBySecurity
 };

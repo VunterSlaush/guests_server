@@ -49,7 +49,7 @@ const Interval = require("./interval.js");
  */
 
 const VISIT_KIND = ["SCHEDULED", "FREQUENT", "NOT EXPECTED", "SPORADIC"];
-const PART_OF_DAYS = ["MORNING", "AFTERNOON", "NIGHT"];
+const PART_OF_DAYS = ["MORNING", "AFTERNOON", "NIGHT", "ALL DAY"];
 const GUEST_TYPE_ENUM = ["User", "Company"];
 const VisitSchema = new Schema(
   {

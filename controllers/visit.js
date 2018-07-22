@@ -148,6 +148,7 @@ async function evaluateVisit(visit) {
 }
 
 function evaluateScheduled(visit) {
+  // TODO evaluate by Type of Day
   const now = moment().tz(visit.timezone);
   const visitDay = moment(visit.dayOfVisit);
   return visitDay.format("DD/MM/YYYY") === now.format("DD/MM/YYYY");
