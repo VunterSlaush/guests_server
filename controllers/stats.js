@@ -11,11 +11,12 @@ async function visitsTypeCountByMonth(community, month, user) {
     .format("YYYY-MM-DD");
 
   const to = moment(from).add(30, "days");
-  const scheduled = await countByType(community, from, to, "SCHEDULED");
-  const frequnt = await countByType(community, from, to, "FREQUENT");
-  const sporadic = await countByType(community, from, to, "SPORADIC");
-  const not_expected = await countByType(community, from, to, "NOT EXPECTED");
-  return { scheduled, frequnt, sporadic, not_expected };
+  const result = [];
+  result[0] = await countByType(community, from, to, "SCHEDULED");
+  result[1] = await countByType(community, from, to, "FREQUENT");
+  result[2] = await countByType(community, from, to, "SPORADIC");
+  result[3] = await countByType(community, from, to, "NOT EXPECTED");
+  return result;
 }
 
 async function visitCountByMonth(community, month, user) {
@@ -35,7 +36,7 @@ async function visitCountByMonth(community, month, user) {
 }
 
 async function countByType(community, from, to, type) {
-  const visits = findVisitsBetween(community, from, to, type);
+  const visits = await findVisitsBetween(community, from, to, type);
   return visits.length;
 }
 
@@ -73,13 +74,13 @@ async function countByPartOfDay(community, month, user) {
 
   const to = moment(from).add(30, "days");
   const visits = await findVisitsBetween(community, from, to);
-  return {
-    "ALL DAY": visits.filter(i => i.partOfDay === "ALL DAY").length,
-    MORNING: visits.filter(i => i.partOfDay === "MORNING").length,
-    NIGHT: visits.filter(i => i.partOfDay === "NIGHT").length,
-    AFTERNOON: visits.filter(i => i.partOfDay === "AFTERNOON").length,
-    NULL: visits.filter(i => !i.partOfDay).length
-  };
+  const result = [];
+  result[3] = visits.filter(i => i.partOfDay === "ALL DAY").length;
+  result[0] = visits.filter(i => i.partOfDay === "MORNING").length;
+  result[2] = visits.filter(i => i.partOfDay === "NIGHT").length;
+  result[1] = visits.filter(i => i.partOfDay === "AFTERNOON").length;
+  result[4] = visits.filter(i => !i.partOfDay).length;
+  return result;
 }
 
 module.exports = {
