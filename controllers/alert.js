@@ -42,7 +42,7 @@ async function destroy(id, user) {
 }
 
 async function userAlerts(user, kind, skip, limit) {
-  const communityUsers = await CommunityUser.find({ user });
+  const communityUsers = await CommunityUser.find({ user, status: "APPROVED" });
   const communities = communityUsers.map(item => item.community);
   const alerts = await Alert.find({ community: { $in: communities }, kind })
     .populate("community")
