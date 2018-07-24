@@ -353,6 +353,35 @@ router.post(
 
 /**
  * @swagger
+ * /communities/{community}/visits:
+ *   get:
+ *     description: listar las visitas de una comunidad
+ *     tags:
+ *      - Community
+ *      - Visit
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: community
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de visitas
+ *         schema:
+ *             $ref: '#/definitions/Community'
+ */
+router.get(
+  "/:comunity/visits",
+  handler(visit.communityVisits, (req, res, next) => [
+    req.params.comunity,
+    req.user
+  ])
+);
+
+/**
+ * @swagger
  * /communities/{community}/approve/{user}:
  *   post:
  *     description: aprobar a un residente

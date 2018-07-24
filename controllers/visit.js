@@ -6,7 +6,8 @@ const moment = require("moment-timezone");
 const Webhook = require("./webhook");
 const {
   findIfUserIsOnCommunity,
-  findIfUserIsCommunitySecure
+  findIfUserIsCommunitySecure,
+  findIfUserIsGranted
 } = require("./utils");
 
 async function create({
@@ -326,6 +327,33 @@ async function giveAccess(visitId, access, user) {
   return { success: true };
 }
 
+async function communityVisits(community, user) {
+  await findIfUserIsGranted(community, user);
+  const visits = await Visit.aggregate([
+    {
+      $lookup: {
+        from: "checks",
+        localField: "_id",
+        foreignField: "visit",
+        as: "checks"
+      }
+    },
+    {
+      $match: {
+        "checks.type": "IN",
+        community: mongoose.Types.ObjectId(community)
+      }
+    }
+  ]);
+  await User.populate(visits, { path: "resident" });
+  const promises = visits.map(visit => {
+    const populator = visit.guestType === "User" ? User : Company;
+    return populator.populate(visit, { path: "guest" });
+  });
+  await Promise.all(promises);
+  return visits;
+}
+
 module.exports = {
   create,
   update,
@@ -333,5 +361,6 @@ module.exports = {
   destroy,
   guestIsScheduled,
   findByResident,
+  communityVisits,
   giveAccess
 };
