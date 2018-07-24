@@ -24,7 +24,13 @@ mongoose.Promise = global.Promise;
  *         type: string
  */
 
-const EVENTS_TYPE = ["ON_NEW_RESIDENT", "ON_NEW_VISIT", "ON_ACCESS"];
+const EVENTS_TYPE = [
+  "ON_NEW_RESIDENT",
+  "ON_NEW_VISIT",
+  "ON_ACCESS",
+  "ON_INCIDENT",
+  "ON_INFORMATION"
+];
 
 const WebhookSchema = new Schema(
   {

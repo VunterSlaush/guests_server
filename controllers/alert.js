@@ -1,19 +1,29 @@
 const { Alert, CommunityUser, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
-const { findIfUserIsGranted } = require("./utils");
+const { findIfUserIsOnCommunity } = require("./utils");
 const OneSignal = require("../oneSignal");
+const Webhooks = require("./webhook");
 // TODO SECURE THIS ROUTE!
 async function create(info, author) {
+  await findIfUserIsOnCommunity(info.community, author);
   try {
     info.author = author;
     let alert = new Alert(info);
     await alert.save();
     await sendAlert(alert);
+    await runOnAlertWebhook(alert);
     return alert;
   } catch (e) {
     throw new ApiError("Error en los datos ingresados", 400);
   }
+}
+
+async function runOnAlertWebhook(alert) {
+  try {
+    if (alert.kind !== "OTHER")
+      await Webhook.run(alert.community, "ON_" + alert.kind, alert);
+  } catch (error) {}
 }
 
 async function update(id, AlertInfo, user) {
