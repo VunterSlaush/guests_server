@@ -191,19 +191,6 @@ async function findByResident(resident, timezone, kind, skip, limit) {
 
     visits = await Visit.aggregate([
       {
-        $match: {
-          resident: mongoose.Types.ObjectId(resident),
-          kind,
-          dayOfVisit: {
-            $gte: new Date(
-              moment()
-                .tz(timezone)
-                .format("YYYY-MM-DD")
-            )
-          }
-        }
-      },
-      {
         $lookup: {
           from: "users",
           localField: "guest",
@@ -229,7 +216,16 @@ async function findByResident(resident, timezone, kind, skip, limit) {
       },
       {
         $match: {
-          checks: { $size: 0 }
+          checks: { $size: 0 },
+          resident: mongoose.Types.ObjectId(resident),
+          kind,
+          dayOfVisit: {
+            $gte: new Date(
+              moment()
+                .tz(timezone)
+                .format("YYYY-MM-DD")
+            )
+          }
         }
       },
       {
@@ -247,6 +243,7 @@ async function findByResident(resident, timezone, kind, skip, limit) {
       { $skip: skip },
       { $limit: limit }
     ]);
+    console.log("VISITS SCHEDULED", visits);
   } else {
     visits = await Visit.aggregate([
       {
