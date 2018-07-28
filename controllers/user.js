@@ -58,6 +58,10 @@ async function update(id, user, image) {
   let userUpdated = await User.findOne({
     _id: id
   });
+  user.address =
+    user.address && user.address instanceof String
+      ? JSON.parse(user.address)
+      : user.address;
   userUpdated.set(user);
   if (image) {
     let imageUrl = await uploadImage(userUpdated, image);
