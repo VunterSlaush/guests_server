@@ -27,7 +27,7 @@ async function destroy(community, id, userId) {
 async function communityWebHooks(community, userId) {
   await findIfUserIsGranted(community, userId);
   const webhooks = await Webhook.find({ community });
-  return { webhooks };
+  return webhooks;
 }
 
 async function run(community, eventType, data) {

@@ -435,7 +435,7 @@ router.put(
  */
 router.get(
   "/:comunity/webhooks",
-  handler(webhook.communityWebhooks, (req, res, next) => [
+  handler(webhook.communityWebHooks, (req, res, next) => [
     req.params.comunity,
     req.user.id
   ])
