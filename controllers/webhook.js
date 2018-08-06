@@ -31,9 +31,13 @@ async function communityWebHooks(community, userId) {
 }
 
 async function run(community, eventType, data) {
-  const webhooks = await Webhook.find({ community, eventType });
-  const requests = webhooks.map(webhook => toRequest(webhook, data));
-  if (requests.length > 0) await axios.all(requests);
+  try {
+    const webhooks = await Webhook.find({ community, eventType });
+    const requests = webhooks.map(webhook => toRequest(webhook, data));
+    if (requests.length > 0) await axios.all(requests);
+  } catch (error) {
+    //console.log("WEBHOOK ERROR", error);
+  }
 }
 
 function toRequest(webhook, data) {

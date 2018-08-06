@@ -70,7 +70,11 @@ const UserSchema = new Schema(
     address: {
       type: Address
     },
-    image: { type: String, fake: "internet.avatar" },
+    image: {
+      type: String,
+      fake: "internet.avatar",
+      default: "../../assets/img/boy.png"
+    },
     timezone: {
       type: String
     },

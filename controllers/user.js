@@ -59,7 +59,7 @@ async function update(id, user, image) {
     _id: id
   });
   user.address =
-    user.address && user.address instanceof String
+    user.address && typeof user.address == "string"
       ? JSON.parse(user.address)
       : user.address;
   userUpdated.set(user);

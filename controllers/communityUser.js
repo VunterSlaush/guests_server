@@ -4,7 +4,7 @@ const { findIfUserIsGranted } = require("./utils");
 const Webhook = require("./webhook");
 
 async function create(community, userToAdd, reference, kind, user) {
-  // await findIfUserIsGranted(community, user);
+  await findIfUserIsGranted(community, user);
   try {
     let communityUser = new CommunityUser({
       community,
@@ -17,9 +17,28 @@ async function create(community, userToAdd, reference, kind, user) {
     if (kind === "RESIDENT") await runOnUserWebhook(community, userToAdd);
     return communityUser;
   } catch (e) {
-    console.log("EEE", e);
-    throw new ApiError("Error en los datos ingresados", 400);
+    if (e.code === 11000)
+      return await changeCommunityUserType(
+        community,
+        userToAdd,
+        reference,
+        kind
+      );
+    else throw new ApiError("Error en los datos ingresados", 400);
   }
+}
+
+async function changeCommunityUserType(community, userToAdd, reference, kind) {
+  const communityUser = await CommunityUser.findOne({
+    community,
+    user: userToAdd,
+    reference
+  });
+
+  if (!communityUser) throw new ApiError("Error en los datos ingresados", 400);
+  communityUser.kind = kind;
+  await communityUser.save();
+  return communityUser;
 }
 
 async function join(community, user, reference) {

@@ -49,6 +49,7 @@ async function create({
     await Webhook.run(community, "ON_NEW_VISIT", visit);
     return visit;
   } catch (e) {
+    console.log("EEE", e);
     throw new ApiError("Error en los datos ingresados", 400);
   }
 }
@@ -101,7 +102,7 @@ async function guestIsScheduled(
 ) {
   await findIfUserIsCommunitySecure(community, userWhoAsk);
   const guest = await findGuest(identification, email, name);
-  if (!guest) return { error: "Visitante no Existente" };
+  if (!guest) throw new ApiError("Visitante no Existente", 404);
 
   const visit = await Visit.find({
     guest: guest.id,
@@ -114,12 +115,10 @@ async function guestIsScheduled(
 
   const visitsFiltered = visits.filter(item => item != null);
 
-  const visitFounded =
-    visitsFiltered.length > 0
-      ? await fillVisit(visitsFiltered[0])
-      : { error: "Visita no Encontrada" };
+  if (visitsFiltered.length === 0)
+    throw new ApiError("Visita no encontrada", 404);
 
-  return visitFounded;
+  return await fillVisit(visitsFiltered[0]);
 }
 
 async function fillVisit(visit) {
@@ -129,8 +128,10 @@ async function fillVisit(visit) {
     .populate("community");
 }
 
-async function findGuest(identification, email, name) {
-  const user = await User.findOne({ $or: [{ identification }, { email }] });
+async function findGuest(identification = "", email = "", name = "") {
+  const user = await User.findOne({
+    $or: [{ identification }, { email }, { name }]
+  });
   const company = await Company.findOne({ name });
   return user ? user : company;
 }
@@ -181,14 +182,6 @@ async function findByResident(resident, timezone, kind, skip, limit) {
       .limit(limit)
       .skip(skip);
   } else if (kind == "SCHEDULED") {
-    console.log(
-      "FIND WITH",
-      timezone,
-      moment()
-        .tz(timezone)
-        .format("YYYY-MM-DD")
-    );
-
     visits = await Visit.aggregate([
       {
         $lookup: {
@@ -222,7 +215,7 @@ async function findByResident(resident, timezone, kind, skip, limit) {
           dayOfVisit: {
             $gte: new Date(
               moment()
-                .tz(timezone)
+                .tz(timezone ? timezone : "America/Bogota")
                 .format("YYYY-MM-DD")
             )
           }
@@ -316,8 +309,13 @@ async function giveAccess(visitId, access, user) {
 
   if (!visit)
     throw new ApiError("No posee autorizacion para realizar esta accion", 401);
+
   const push = await send(visit.creator.devices, "VISIT ACCESS", {
-    visit,
+    visit: {
+      resident: visit.resident,
+      guest: visit.guest,
+      kind: visit.kind
+    },
     access
   });
   if (access) await check(visit.id, "IN");
@@ -351,6 +349,14 @@ async function communityVisits(community, user) {
   return visits;
 }
 
+async function detail(visit, user) {
+  return await Visit.findOne({ _id: visit })
+    .populate("guest")
+    .populate("creator")
+    .populate("resident")
+    .populate("community");
+}
+
 module.exports = {
   create,
   update,
@@ -359,5 +365,6 @@ module.exports = {
   guestIsScheduled,
   findByResident,
   communityVisits,
-  giveAccess
+  giveAccess,
+  detail
 };

@@ -39,7 +39,9 @@ async function update(id, communityInfo, user) {
 }
 
 async function all() {
-  return await Community.find({});
+  const communities = await Community.find({});
+  console.log("COMMUN", communities);
+  return communities;
 }
 
 async function destroy(id, user) {

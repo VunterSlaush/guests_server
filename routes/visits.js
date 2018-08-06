@@ -69,6 +69,36 @@ router.put(
 
 /**
  * @swagger
+ * /visits/{visit}:
+ *   get:
+ *     description: Detalles de la visita
+ *     tags:
+ *      - Visit
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - name: body
+ *         description: Visita
+ *         in:  body
+ *         schema:
+ *           $ref: '#/definitions/Visit'
+ *       - name: visit
+ *         in:  path
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Visita Creada
+ *         schema:
+ *             $ref: '#/definitions/Visit'
+ */
+router.get(
+  "/:visit",
+  handler(visit.detail, (req, res, next) => [req.params.visit, req.user])
+);
+
+/**
+ * @swagger
  * /visits/{visit}/giveAccess:
  *   put:
  *     description: Dar Acceso a un Visitante
