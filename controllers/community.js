@@ -235,10 +235,11 @@ async function uploadFiles(files) {
 }
 
 async function uploadFile(dir, file) {
+  const URL = process.env.URL || "http://localhost:3000";
   return new Promise((resolve, reject) => {
     file.mv(`${dir}/${file.name}`, err => {
       if (err) reject(err);
-      resolve(`${dir}/${file.name}`);
+      resolve(`${URL}/${dir}/${file.name}`);
     });
   });
 }

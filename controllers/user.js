@@ -41,10 +41,11 @@ async function removeDevice(device, user) {
 }
 
 async function uploadImage(user, image) {
+  const URL = process.env.URL || "http://localhost:3000";
   return new Promise((resolve, reject) => {
     image.mv(`storage/${image.name}`, err => {
       if (err) reject(err);
-      resolve(`storage/${image.name}`);
+      resolve(`${URL}/storage/${image.name}`);
     });
   });
 }
