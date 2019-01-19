@@ -10,7 +10,7 @@ const swaggerJSDoc = require("swagger-jsdoc");
 const getSwaggerJSDocOpts = require("./docs/options.js");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const mongoDB = process.env.MONGODB_URI || "mongodb://127.0.0.1/guests";
+const mongoDB = process.env.MONGODB_URI || "mongodb://local:mota123@ds157475.mlab.com:57475/heroku_f5xnh953";
 const fileUpload = require("express-fileupload");
 const auth = require("./auth");
 const fs = require("fs");
@@ -18,7 +18,7 @@ const https = require("https");
 
 mongoose.connect(
   mongoDB,
-  {}
+  { useNewUrlParser: true }
 );
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;

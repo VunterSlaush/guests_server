@@ -4,11 +4,15 @@ const ApiError = require("../utils/ApiError");
 const mongoose = require("mongoose");
 const moment = require("moment-timezone");
 const Webhook = require("./webhook");
+const uuidv5 = require('uuid/v5');
 const {
   findIfUserIsOnCommunity,
   findIfUserIsCommunitySecure,
   findIfUserIsGranted
 } = require("./utils");
+
+const UUID_NAMESPACE = "f5f8cbe3-1431-4a9d-8d3a-9424fc493b1e";
+const TOKEN_LENGTH = 6;
 
 async function create({
   resident,
@@ -24,16 +28,17 @@ async function create({
 }) {
   try {
     await findIfUserIsOnCommunity(community, resident);
-
     const guest = await findOrCreateGuest(identification, name, kind);
-
+    const token = createToken(community);
+    console.log("TOKEEEN",token)
     let visit = new Visit({
       resident,
       guest: guest._id,
       community,
       kind,
       guestType: kind == "SPORADIC" ? "Company" : "User",
-      timezone
+      timezone,
+      token
     });
 
     if (kind == "SCHEDULED") {
@@ -42,16 +47,29 @@ async function create({
       visit.partOfDay = partOfDay;
     }
 
-    if (kind == "FREQUENT") visit.intervals = intervals;
+    if (kind == "FREQUENT") {
+      visit.intervals = intervals;
+      visit.limit = moment().add("1", "year");
+    }
 
     await visit.save();
     await populateVisit(visit);
     await Webhook.run(community, "ON_NEW_VISIT", visit);
     return visit;
   } catch (e) {
-    console.log("EEE", e);
     throw new ApiError("Error en los datos ingresados", 400);
   }
+}
+
+function createToken(community)
+{
+  const ids = uuidv5(community, UUID_NAMESPACE).replace(/[\[\]-]+/g, '');
+  let result = '';
+  for (let index = 0; index < TOKEN_LENGTH; index++) {
+    const i = Math.floor(Math.random() * (ids.length - 1));
+    result += ids[i];
+  }
+  return `${community}-${result}`;
 }
 
 async function populateVisit(visit) {

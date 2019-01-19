@@ -28,6 +28,10 @@ const Interval = require("./interval.js");
  *         type: string
  *         format: date
  *         description: Day of Visit!
+  *       limit:
+ *         type: string
+ *         format: date
+ *         description: The limit of the Visit could be valid to get in into a community
  *       kind:
  *         type: string
  *         description: the type of visit
@@ -41,6 +45,9 @@ const Interval = require("./interval.js");
  *       timezone:
  *         type: string
  *         description: the timezone of the visit!
+ *       token:
+ *         type: string
+ *         description: the Identifier Token of the Visit. 
  *       intervals:
  *         type: array
  *         items:
@@ -69,6 +76,7 @@ const VisitSchema = new Schema(
       required: true
     },
     dayOfVisit: { type: Date, fake: "date.future" },
+    limit: { type: Date, fake: "date.future" },
     partOfDay: { type: String, enum: PART_OF_DAYS, default: "AFTERNOON" },
     creator: {
       type: Schema.Types.ObjectId,
@@ -91,6 +99,11 @@ const VisitSchema = new Schema(
       type: String,
       required: true,
       default: "America/Bogota"
+    },
+    token: {
+      type: String,
+      required: true,
+      fake: "random.alphaNumeric"
     },
     images: [String]
   },
