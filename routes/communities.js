@@ -270,7 +270,7 @@ router.post(
  * @swagger
  * /communities/{community}/resident:
  *   post:
- *     description: A;adir residente o residentes
+ *     description: Add residents
  *     tags:
  *      - Community
  *      - CommunityUser
@@ -314,7 +314,7 @@ router.post(
  * @swagger
  * /communities/{community}/administrator:
  *   post:
- *     description: A;adir personal de administracion
+ *     description: Add Admins
  *     tags:
  *      - Community
  *      - CommunityUser
@@ -627,7 +627,8 @@ router.post(
     req.body.identification,
     req.body.email,
     req.body.name,
-    req.user
+    req.user,
+    req.body.token
   ])
 );
 

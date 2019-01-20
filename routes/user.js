@@ -199,6 +199,33 @@ secureRouter.get(
 
 /**
  * @swagger
+ * /user/me/guests:
+ *   get:
+ *     description: Lista de visitas a las que estoy invitado
+ *     tags:
+ *      - User
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *       - $ref: "#/parameters/skip"
+ *       - $ref: "#/parameters/limit"
+ *     responses:
+ *       200:
+ *         description: Array of Visits!
+ *         schema:
+ *             $ref: '#/definitions/Visit'
+ */
+secureRouter.get(
+  "/me/guests",
+  handler(visit.findByGuest, (req, res, next) => [
+    req.user,
+    !req.query.skip ? 0 : Number(req.query.skip),
+    !req.query.limit ? 30 : Number(req.query.limit)
+  ])
+);
+
+/**
+ * @swagger
  * /user/me/visits/{type}:
  *   get:
  *     description: Lista de visitas

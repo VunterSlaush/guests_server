@@ -30,7 +30,6 @@ async function create({
     await findIfUserIsOnCommunity(community, resident);
     const guest = await findOrCreateGuest(identification, name, kind);
     const token = createToken(community);
-    console.log("TOKEEEN",token)
     let visit = new Visit({
       resident,
       guest: guest._id,
@@ -61,8 +60,7 @@ async function create({
   }
 }
 
-function createToken(community)
-{
+function createToken(community) {
   const ids = uuidv5(community, UUID_NAMESPACE).replace(/[\[\]-]+/g, '');
   let result = '';
   for (let index = 0; index < TOKEN_LENGTH; index++) {
@@ -116,7 +114,8 @@ async function guestIsScheduled(
   identification,
   email,
   name,
-  userWhoAsk
+  userWhoAsk,
+  token
 ) {
   await findIfUserIsCommunitySecure(community, userWhoAsk);
   const guest = await findGuest(identification, email, name);
@@ -254,7 +253,6 @@ async function findByResident(resident, timezone, kind, skip, limit) {
       { $skip: skip },
       { $limit: limit }
     ]);
-    console.log("VISITS SCHEDULED", visits);
   } else {
     visits = await Visit.aggregate([
       {
@@ -367,7 +365,24 @@ async function communityVisits(community, user) {
   return visits;
 }
 
-async function detail(visit, user) {
+async function findByGuest(user, skip, limit) {
+  const visits = await Visit.find({
+    guest: user.id,
+    $or: [
+      { limit: { $gte: moment().tz(user.timezone) }, kind: "FREQUENT" },
+      { dayOfVisit: { $gte: moment().tz(user.timezone) }, kind: "SCHEDULED" }
+    ],
+  })
+    .skip(skip)
+    .limit(limit)
+    .populate("resident")
+    .populate("guest")
+    .populate("community");
+
+  return { visits };
+}
+
+async function detail(visit) {
   return await Visit.findOne({ _id: visit })
     .populate("guest")
     .populate("creator")
@@ -384,5 +399,6 @@ module.exports = {
   findByResident,
   communityVisits,
   giveAccess,
-  detail
+  detail,
+  findByGuest
 };
