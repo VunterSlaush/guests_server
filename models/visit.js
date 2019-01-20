@@ -116,6 +116,6 @@ const VisitSchema = new Schema(
 );
 
 VisitSchema.statics.residentSelector =
-  "guest community dayOfVisit intervals kind guestType partOfDay";
+  "guest community dayOfVisit intervals kind guestType partOfDay token limit";
 
 module.exports = mongoose.model("Visit", VisitSchema);

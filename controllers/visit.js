@@ -118,15 +118,24 @@ async function guestIsScheduled(
   token
 ) {
   await findIfUserIsCommunitySecure(community, userWhoAsk);
-  const guest = await findGuest(identification, email, name);
-  if (!guest) throw new ApiError("Visitante no Existente", 404);
+  let visit;
 
-  const visit = await Visit.find({
-    guest: guest.id,
-    community
-  }).sort({
-    created_at: -1
-  });
+  if (token) {
+    visit = await Visit.find({
+      token: `${community}-${token}`
+    }).sort({
+      created_at: -1
+    });
+  } else {
+    const guest = await findGuest(identification, email, name);
+    if (!guest) throw new ApiError("Visitante no Existente", 404);
+    visit = await Visit.find({
+      guest: guest.id,
+      community
+    }).sort({
+      created_at: -1
+    });
+  }
 
   const visits = await Promise.all(visit.map(item => evaluateVisit(item)));
 
