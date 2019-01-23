@@ -38,10 +38,13 @@ async function update(id, communityInfo, user) {
   return community;
 }
 
-async function all() {
-  const communities = await Community.find({});
-  console.log("COMMUN", communities);
-  return communities;
+async function all(query, skip, limit) {
+  return await Community.find({
+    $or: [
+      { name: { $regex: query, $options: "i" } },
+      { "address.fullAddress": { $regex: query, $options: "i" } },
+    ]
+  }).skip(skip).limit(limit);
 }
 
 async function destroy(id, user) {

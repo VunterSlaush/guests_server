@@ -54,7 +54,10 @@ router.post(
  *         schema:
  *             $ref: '#/definitions/Community'
  */
-router.get("/", handler(community.all, (req, res, next) => []));
+router.get("/", handler(community.all, (req, res, next) =>
+  [!req.query.query ? "" : req.query.query,
+  !req.query.skip ? 0 : Number(req.query.skip),
+  !req.query.limit ? 30 : Number(req.query.limit)]));
 
 /**
  * @swagger
