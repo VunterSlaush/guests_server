@@ -56,6 +56,7 @@ async function create({
     await Webhook.run(community, "ON_NEW_VISIT", visit);
     return visit;
   } catch (e) {
+    console.error("{VISIT} Error Creating:", e);
     throw new ApiError("Error en los datos ingresados", 400);
   }
 }

@@ -26,6 +26,7 @@ async function create(info, image) {
     await user.save();
     return auth(user);
   } catch (e) {
+    console.log("{USER} Error Creating:", e);
     if ((e.code && e.code == 11000) || e.status == 409)
       throw new ApiError("La cedula o el correo esta repetido", 409);
     throw new ApiError("Error en los parametros ingresados", 400);

@@ -17,6 +17,7 @@ async function create(community, userToAdd, reference, kind, user) {
     if (kind === "RESIDENT") await runOnUserWebhook(community, userToAdd);
     return communityUser;
   } catch (e) {
+
     if (e.code === 11000)
       return await changeCommunityUserType(
         community,
@@ -25,6 +26,7 @@ async function create(community, userToAdd, reference, kind, user) {
         kind
       );
     else throw new ApiError("Error en los datos ingresados", 400);
+    console.log("{COMMUNITY_USER} Error Creating:", e);
   }
 }
 
