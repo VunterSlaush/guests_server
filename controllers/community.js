@@ -161,7 +161,8 @@ async function requestAccess(
     kind: "NOT EXPECTED",
     creator: user.id,
     timezone: resident.timezone,
-    images: photos
+    images: photos,
+    token: ""
   });
 
   await visit.save();
@@ -220,7 +221,8 @@ async function giveAccessBySecurity(
     kind: "NOT EXPECTED",
     creator: user.id,
     timezone: user.timezone,
-    images: photos
+    images: photos,
+    token: ""
   });
 
   await visit.save();
