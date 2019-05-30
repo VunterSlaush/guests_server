@@ -151,7 +151,7 @@ async function requestAccess(
     "devices.0": { $exists: true }
   });
 
-  if (!resident) throw new ApiError("Residente no encontrado", 404);
+  if (!resident) throw new ApiError("Dispositivo del residente no encontrado", 412);
 
   const photos = await uploadFiles(files);
   const visit = new Visit({
