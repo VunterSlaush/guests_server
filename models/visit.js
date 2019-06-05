@@ -102,7 +102,6 @@ const VisitSchema = new Schema(
     },
     token: {
       type: String,
-      required: true,
       fake: "random.alphaNumeric"
     },
     images: [String]
