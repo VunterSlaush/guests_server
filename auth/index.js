@@ -21,7 +21,7 @@ function init() {
 
 function user(req, res, next) {
   return passport.authenticate("local", { session: false }, (err, data) => {
-    if (err || !data) return res.status(401).send("Usuario no Encontrado");
+    if (err || !data) return res.status(401).send({ status: 401, message: "Usuario no encontrado" });
     req.user = data;
     if (req.user.redirect) res.redirect(req.user.redirect);
     else next();
@@ -30,7 +30,7 @@ function user(req, res, next) {
 
 function security(req, res, next) {
   return passport.authenticate("security", { session: false }, (err, data) => {
-    if (err || !data) return res.status(401).send("Usuario no Encontrado");
+    if (err || !data) return res.status(401).send({ status: 401, message: "Usuario no encontrado" });
     req.user = data;
     if (req.user.redirect) res.redirect(req.user.redirect);
     else next();
