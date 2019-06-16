@@ -191,32 +191,10 @@ async function giveAccessBySecurity(
     { identification, name, timezone: user.timezone }
   );
 
-  const resident = await User.findOneOrCreate(
-    { identification: residentIdentification },
-    {
-      identification: residentIdentification,
-      name: "NO NAME",
-      timezone: user.timezone
-    }
-  );
-
-  const communityUser = await CommunityUser.findOrCreate(
-    {
-      community: communityId,
-      user: resident.id
-    },
-    {
-      community: communityId,
-      user: resident.id,
-      kind: "RESIDENT",
-      reference
-    }
-  );
-
   const photos = await uploadFiles(files);
   const visit = new Visit({
     community: communityId,
-    resident: resident.id,
+    resident: user.id,
     guest: guest.id,
     kind: "NOT EXPECTED",
     creator: user.id,
