@@ -359,6 +359,14 @@ async function communityVisits(community, user) {
       }
     },
     {
+      $lookup: {
+        from: "community_users",
+        localField: "community",
+        foreignField: "community",
+        as: "community_user"
+      }
+    },
+    {
       $match: {
         "checks.type": "IN",
         community: mongoose.Types.ObjectId(community)
