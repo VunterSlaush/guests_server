@@ -360,7 +360,7 @@ async function communityVisits(community, user) {
     },
     {
       $lookup: {
-        from: "community_users",
+        from: "communityUsers",
         localField: "community",
         foreignField: "community",
         as: "community_user"
