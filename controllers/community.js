@@ -190,11 +190,11 @@ async function giveAccessBySecurity(
     { identification },
     { identification, name, timezone: user.timezone }
   );
-
+  const resident = await User.findOne({identification: residentIdentification});  
   const photos = await uploadFiles(files);
   const visit = new Visit({
     community: communityId,
-    resident: user.id,
+    resident: resident.id || user.id,
     guest: guest.id,
     kind: "NOT EXPECTED",
     creator: user.id,
