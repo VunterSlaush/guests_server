@@ -195,7 +195,7 @@ async function giveAccessBySecurity(
   const photos = await uploadFiles(files);
   const visit = new Visit({
     community: communityId,
-    resident: resident ? resident.id : user.id,
+    resident: resident ? resident.user : user.id,
     guest: guest.id,
     kind: "NOT EXPECTED",
     creator: user.id,
